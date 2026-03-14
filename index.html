@@ -4,90 +4,88 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portal de Vagas - Cadastro</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-            background-color: #e3f2fd; /* Azul Claro */
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
+        body { 
+            margin: 0; padding: 0; font-family: Arial, sans-serif; 
+            background-color: #e3f2fd; min-height: 100vh; 
+            display: flex; flex-direction: column; 
         }
 
-        /* Menu Superior Direito */
-        .top-menu {
-            position: absolute;
-            top: 20px;
-            right: 30px;
-            font-size: 12px;
-            color: #555;
-        }
-        .top-menu span {
-            cursor: pointer;
-            margin: 0 5px;
+        /* Menu Superior */
+        .top-menu { 
+            position: absolute; top: 20px; right: 30px; 
+            font-size: 12px; color: #555; letter-spacing: 1px; 
         }
 
-        /* Centralização do Conteúdo */
-        .main-container {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 40px;
+        .main-container { 
+            flex: 1; display: flex; justify-content: center; 
+            align-items: center; gap: 40px; padding: 20px;
         }
 
-        /* O "Balão" com as pontas arredondadas */
-        .btn-cadastro {
-            background-color: #ffffff;
-            color: #0d47a1;
-            padding: 40px 60px;
-            border-radius: 50px; /* Arredondado */
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 1.2rem;
-            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
-            transition: all 0.2s ease;
-            border: none;
-            cursor: pointer;
-            text-transform: uppercase;
+        /* Botões Iniciais (Balão Arredondado) */
+        .card-balao { 
+            background-color: #ffffff; color: #0d47a1; padding: 40px 60px; 
+            border-radius: 60px; box-shadow: 0 8px 15px rgba(0,0,0,0.1); 
+            transition: all 0.2s ease; border: none; cursor: pointer; 
+            text-transform: uppercase; font-weight: bold; font-size: 1.1rem; 
         }
 
-        /* Efeito de Clique (Afundar) */
-        .btn-cadastro:active {
-            transform: translateY(4px);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        .card-balao:active { 
+            transform: translateY(6px); 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2); 
         }
 
-        .btn-cadastro:hover {
-            background-color: #f0f7ff;
+        /* Formulário Estilo Corporativo */
+        .form-cadastro {
+            background: #f8f9fa; border-radius: 8px;
+            width: 100%; max-width: 650px; text-align: left;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15); border: 1px solid #ccc;
         }
+
+        .form-header {
+            background: #cedce7; padding: 12px 20px;
+            border-radius: 8px 8px 0 0; color: #333;
+            font-weight: bold; border-bottom: 1px solid #abbbc8;
+        }
+
+        .form-body { padding: 25px; }
+
+        .section-title {
+            background: #dee2e6; padding: 6px 12px;
+            margin: 20px 0 10px 0; font-size: 13px;
+            color: #0d47a1; font-weight: bold; text-transform: uppercase;
+        }
+        .section-title:first-child { margin-top: 0; }
+
+        label { display: block; font-size: 12px; margin-bottom: 4px; color: #444; font-weight: bold; }
+        
+        input, select, textarea {
+            width: 100%; padding: 8px; margin-bottom: 12px;
+            border: 1px solid #bbb; border-radius: 3px; box-sizing: border-box;
+        }
+
+        .row { display: flex; gap: 20px; }
+        .col { flex: 1; }
+
+        .btn-cadastrar-final {
+            background-color: #1a73e8; color: white; border: none;
+            padding: 12px 25px; border-radius: 4px; cursor: pointer;
+            font-weight: bold; margin-top: 15px; width: 150px;
+        }
+
+        .btn-cadastrar-final:hover { background-color: #1557b0; }
+        .btn-cadastrar-final:active { transform: translateY(2px); }
+
+        .link-voltar { color: #1976d2; text-decoration: none; font-size: 13px; margin-left: 15px; }
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
-    <div class="top-menu">
-        DUVIDAS | SUPORTE
+    <div class="top-menu">DUVIDAS | SUPORTE</div>
+
+    <div class="main-container" id="tela-inicial">
+        <button class="card-balao" onclick="abrirForm('empresa')">Cadastre sua Empresa</button>
+        <button class="card-balao" onclick="abrirForm('curriculo')">Cadastre seu Currículo</button>
     </div>
-
-    <div class="main-container">
-        <button class="btn-cadastro" onclick="cadastrar('empresa')">
-            Cadastre sua Empresa
-        </button>
-
-        <button class="btn-cadastro" onclick="cadastrar('curriculo')">
-            Cadastre seu Currículo
-        </button>
-    </div>
-
-    <script>
-        function cadastrar(tipo) {
-            console.log("Iniciando cadastro para: " + tipo);
-            // Aqui faremos a chamada para o Back-end no futuro
-            alert("Redirecionando para cadastro de " + tipo);
-        }
-    </script>
-</body>
-</html>
-const SB_URL = 'https://somngtdevyazwqonmayo.supabase.co'; 
-const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNvbW5ndGRldnlhendxb25tYXlvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM1MTk2NTQsImV4cCI6MjA4OTA5NTY1NH0.RGf3ZMVw6n4GyIVroBBUoD7dmKQAOReUuAsew0DVBVw';
