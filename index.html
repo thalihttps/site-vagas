@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal de Vagas - Cadastro</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #e3f2fd; /* Azul Claro */
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Menu Superior Direito */
+        .top-menu {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 12px;
+            color: #555;
+        }
+        .top-menu span {
+            cursor: pointer;
+            margin: 0 5px;
+        }
+
+        /* Centralização do Conteúdo */
+        .main-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 40px;
+        }
+
+        /* O "Balão" com as pontas arredondadas */
+        .btn-cadastro {
+            background-color: #ffffff;
+            color: #0d47a1;
+            padding: 40px 60px;
+            border-radius: 50px; /* Arredondado */
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.2rem;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+            transition: all 0.2s ease;
+            border: none;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        /* Efeito de Clique (Afundar) */
+        .btn-cadastro:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .btn-cadastro:hover {
+            background-color: #f0f7ff;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top-menu">
+        DUVIDAS | SUPORTE
+    </div>
+
+    <div class="main-container">
+        <button class="btn-cadastro" onclick="cadastrar('empresa')">
+            Cadastre sua Empresa
+        </button>
+
+        <button class="btn-cadastro" onclick="cadastrar('curriculo')">
+            Cadastre seu Currículo
+        </button>
+    </div>
+
+    <script>
+        function cadastrar(tipo) {
+            console.log("Iniciando cadastro para: " + tipo);
+            // Aqui faremos a chamada para o Back-end no futuro
+            alert("Redirecionando para cadastro de " + tipo);
+        }
+    </script>
+</body>
+</html>
