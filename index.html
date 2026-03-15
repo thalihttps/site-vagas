@@ -8,63 +8,61 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body { margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; background-color: #f0f4f8; overflow-x: hidden; }
-
+        
         /* Barra Superior */
-        .top-bar { 
-            background: #0d47a1; color: white; padding: 10px 20px; 
-            display: flex; align-items: center; position: fixed; top: 0; width: 100%; z-index: 1000; 
-        }
+        .top-bar { background: #0d47a1; color: white; padding: 12px 20px; display: flex; align-items: center; position: fixed; top: 0; width: 100%; z-index: 1000; box-sizing: border-box; }
         .btn-menu { background: none; border: none; color: white; font-size: 22px; cursor: pointer; margin-right: 20px; }
         .logo { font-weight: bold; font-size: 18px; letter-spacing: 1px; cursor: pointer; }
 
-        /* Sidebar (Menu Lateral) */
-        .sidebar { 
-            position: fixed; left: -280px; top: 0; width: 280px; height: 100%; 
-            background: #ffffff; box-shadow: 2px 0 10px rgba(0,0,0,0.1); 
-            transition: 0.3s; z-index: 1001; padding-top: 60px; 
-        }
+        /* Sidebar Retrátil */
+        .sidebar { position: fixed; left: -280px; top: 0; width: 280px; height: 100%; background: #fff; box-shadow: 2px 0 10px rgba(0,0,0,0.1); transition: 0.3s; z-index: 1001; padding-top: 60px; }
         .sidebar.active { left: 0; }
-        
-        .menu-perfil { text-align: center; padding: 20px; border-bottom: 1px solid #eee; }
-        .foto-perfil { width: 70px; height: 70px; background: #ddd; border-radius: 50%; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; font-size: 35px; color: #aaa; overflow: hidden; }
-        .menu-item { display: flex; align-items: center; padding: 15px 25px; color: #444; text-decoration: none; transition: 0.2s; cursor: pointer; font-size: 14px; }
-        .menu-item:hover { background: #e3f2fd; color: #0d47a1; }
-        .menu-item i { margin-right: 15px; width: 20px; text-align: center; }
+        .menu-perfil { text-align: center; padding: 25px 20px; border-bottom: 1px solid #eee; }
+        .foto-perfil { width: 75px; height: 75px; background: #e0e0e0; border-radius: 50%; margin: 0 auto 12px; display: flex; align-items: center; justify-content: center; font-size: 35px; color: #999; border: 2px solid #0d47a1; overflow: hidden; }
+        .menu-item { display: flex; align-items: center; padding: 15px 25px; color: #444; text-decoration: none; cursor: pointer; font-size: 14px; transition: 0.2s; }
+        .menu-item:hover { background: #f0f7ff; color: #0d47a1; }
+        .menu-item i { margin-right: 15px; width: 20px; text-align: center; font-size: 18px; }
 
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); display: none; z-index: 999; }
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); display: none; z-index: 999; }
         .overlay.active { display: block; }
 
-        /* Conteúdo */
-        .main-content { padding: 80px 20px 40px; text-align: center; }
+        /* Conteúdo Principal */
+        .main-content { padding: 100px 20px 40px; max-width: 1200px; margin: 0 auto; text-align: center; }
         .hidden { display: none !important; }
 
-        /* Forms e Cards */
-        .card-balao { background: white; color: #0d47a1; padding: 25px 40px; border-radius: 50px; border: none; cursor: pointer; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin: 15px; font-size: 14px; }
-        .form-container { background: white; border-radius: 8px; width: 100%; max-width: 500px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); margin: 20px auto; border: 1px solid #ddd; overflow: hidden; text-align: left; }
-        .form-header { background: #cedce7; padding: 15px; font-weight: bold; }
-        .form-body { padding: 20px; }
-        label { display: block; font-size: 12px; font-weight: bold; margin-bottom: 5px; color: #555; }
-        input, select, textarea { width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-        .btn-enviar { background: #1a73e8; color: white; border: none; padding: 12px; border-radius: 4px; cursor: pointer; font-weight: bold; width: 100%; }
+        /* Formulários */
+        .form-container { background: white; border-radius: 12px; width: 100%; max-width: 550px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); margin: 0 auto; text-align: left; overflow: hidden; border: 1px solid #ddd; }
+        .form-header { background: #cedce7; padding: 18px 25px; font-weight: bold; color: #2c3e50; font-size: 18px; }
+        .form-body { padding: 25px; }
+        .section-title { background: #f8f9fa; padding: 8px 12px; margin: 15px 0 12px; font-size: 11px; color: #0d47a1; font-weight: bold; text-transform: uppercase; border-left: 4px solid #0d47a1; }
+        label { display: block; font-size: 12px; font-weight: bold; margin-bottom: 5px; color: #444; }
+        input, select, textarea { width: 100%; padding: 11px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; font-family: inherit; }
         
-        /* Dashboard Vagas */
-        .vagas-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; margin-top: 30px; text-align: left; }
-        .vaga-card { background: white; padding: 20px; border-radius: 8px; border-left: 5px solid #0d47a1; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        /* Barra de Senha */
+        .pw-meter { height: 6px; background: #eee; border-radius: 3px; margin: -10px 0 15px; overflow: hidden; }
+        .pw-bar { height: 100%; width: 0; transition: 0.3s; }
+
+        .btn-action { background: #0d47a1; color: white; border: none; padding: 14px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; font-size: 15px; }
+        .card-balao { background: white; color: #0d47a1; padding: 30px 45px; border-radius: 60px; border: 2px solid #0d47a1; cursor: pointer; font-weight: bold; margin: 15px; transition: 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .card-balao:hover { background: #0d47a1; color: white; }
+
+        .vagas-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; margin-top: 30px; text-align: left; }
+        .vaga-card { background: white; padding: 20px; border-radius: 10px; border-top: 4px solid #0d47a1; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
     </style>
 </head>
 <body>
 
     <div class="top-bar">
         <button class="btn-menu" onclick="toggleMenu()"><i class="fas fa-bars"></i></button>
-        <div class="logo" onclick="location.reload()">PORTAL CONECTA</div>
+        <div class="logo" onclick="location.reload()">CONECTA VAGAS</div>
     </div>
 
     <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 
     <div class="sidebar" id="sidebar">
         <div class="menu-perfil">
-            <div class="foto-perfil"><i class="fas fa-user"></i></div>
-            <strong id="display-nome">Visitante</strong>
+            <div class="foto-perfil"><i class="fas fa-user-tie"></i></div>
+            <strong id="side-nome">Visitante</strong>
         </div>
 
         <div id="menu-visitante">
@@ -73,42 +71,43 @@
         </div>
 
         <div id="menu-empresa" class="hidden">
-            <div class="menu-item" onclick="alert('Perfil em breve')"><i class="fas fa-circle-user"></i> Meu Perfil</div>
-            <div class="menu-item" onclick="abrirFormVaga()"><i class="fas fa-briefcase"></i> Publicar novas vagas</div>
-            <div class="menu-item" onclick="alert('Minhas vagas em breve')"><i class="fas fa-list-check"></i> Minhas vagas publicadas</div>
+            <div class="menu-item"><i class="fas fa-circle-user"></i> Meu Perfil</div>
+            <div class="menu-item" onclick="abrirNovaVaga()"><i class="fas fa-briefcase"></i> Publicar novas vagas</div>
+            <div class="menu-item"><i class="fas fa-list-check"></i> Minhas vagas publicadas</div>
         </div>
 
         <div id="menu-candidato" class="hidden">
-            <div class="menu-item" onclick="alert('Perfil em breve')"><i class="fas fa-circle-user"></i> Meu Perfil</div>
-            <div class="menu-item" onclick="mostrarTela('dashboard')"><i class="fas fa-search"></i> Ver Vagas</div>
+            <div class="menu-item"><i class="fas fa-circle-user"></i> Meu Perfil</div>
+            <div class="menu-item" onclick="mostrarTela('dashboard')"><i class="fas fa-briefcase"></i> Minhas Vagas</div>
         </div>
 
-        <div class="menu-item" onclick="location.reload()" style="color:#f44336; margin-top: 20px; border-top: 1px solid #eee;">
+        <div class="menu-item" onclick="location.reload()" style="color:#d32f2f; margin-top:30px; border-top: 1px solid #eee;">
             <i class="fas fa-power-off"></i> Sair
         </div>
     </div>
 
     <div class="main-content">
         <div id="tela-inicial">
-            <h1 style="color:#0d47a1">Conectando Talentos</h1>
-            <button class="card-balao" onclick="abrirCadastro('empresa')">SOU EMPRESA</button>
-            <button class="card-balao" onclick="abrirCadastro('candidato')">SOU CANDIDATO</button>
+            <h1 style="color:#0d47a1; font-size: 2.2rem;">Sua carreira começa aqui.</h1>
+            <button class="card-balao" onclick="montarCadastro('empresa')">CADASTRAR EMPRESA</button>
+            <button class="card-balao" onclick="montarCadastro('candidato')">CADASTRAR CURRÍCULO</button>
         </div>
 
         <div id="tela-entrar" class="hidden">
-            <h1>Acessar Conta</h1>
-            <button class="card-balao" onclick="simularLogin('empresa')">LOGIN EMPRESA</button>
-            <button class="card-balao" onclick="simularLogin('candidato')">LOGIN CANDIDATO</button>
+            <h1 style="color:#0d47a1">Acessar sua conta</h1>
+            <button class="card-balao" onclick="loginFake('empresa')">SOU EMPRESA</button>
+            <button class="card-balao" onclick="loginFake('candidato')">SOU CANDIDATO</button>
         </div>
 
         <div id="tela-form" class="hidden">
-            <div id="container-dinamico"></div>
+            <div id="area-form"></div>
         </div>
 
         <div id="tela-dashboard" class="hidden">
-            <h2 style="text-align: left;">Vagas Recentes</h2>
-            <div class="vagas-grid" id="lista-vagas">
-                </div>
+            <h2 style="text-align: left; color:#333;">Oportunidades recentes</h2>
+            <div class="vagas-grid" id="vagas-container">
+                <div class="vaga-card"><h3>Bem-vindo ao portal!</h3><p>Cadastre uma vaga ou procure uma oportunidade no menu lateral.</p></div>
+            </div>
         </div>
     </div>
 
@@ -116,7 +115,7 @@
         const SB_URL = 'https://somngtdevyazwqonmayo.supabase.co'; 
         const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNvbW5ndGRldnlhendxb25tYXlvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM1MTk2NTQsImV4cCI6MjA4OTA5NTY1NH0.RGf3ZMVw6n4GyIVroBBUoD7dmKQAOReUuAsew0DVBVw'; 
         const _supabase = supabase.createClient(SB_URL, SB_KEY);
-        let tipoUsuario = '';
+        let userTipo = '';
 
         function toggleMenu() {
             document.getElementById('sidebar').classList.toggle('active');
@@ -126,84 +125,127 @@
         function mostrarTela(id) {
             ['tela-inicial', 'tela-entrar', 'tela-form', 'tela-dashboard'].forEach(t => document.getElementById(t).classList.add('hidden'));
             document.getElementById('tela-' + id).classList.remove('hidden');
-            if(document.getElementById('sidebar').classList.contains('active')) toggleMenu();
         }
 
-        function abrirCadastro(tipo) {
-            tipoUsuario = tipo;
+        function montarCadastro(tipo) {
+            userTipo = tipo;
             mostrarTela('form');
-            const container = document.getElementById('container-dinamico');
+            const area = document.getElementById('area-form');
+            
             if(tipo === 'empresa') {
-                container.innerHTML = `
+                area.innerHTML = `
                 <div class="form-container">
-                    <div class="form-header">Cadastro Empresa</div>
+                    <div class="form-header">Cadastro de Empresa</div>
                     <div class="form-body">
+                        <div class="section-title">Dados de Login</div>
                         <label>E-mail Corporativo:</label><input type="email" id="f_email">
-                        <label>Senha:</label><input type="password" id="f_senha">
-                        <label>Nome Empresa:</label><input type="text" id="f_nome">
-                        <label>CNPJ:</label><input type="text" id="f_doc" maxlength="14">
-                        <button class="btn-enviar" onclick="salvarBD()">CADASTRAR</button>
+                        <label>Crie uma Senha:</label>
+                        <input type="password" id="f_pass" oninput="validarPw(this.value)">
+                        <div class="pw-meter"><div id="pw-bar" class="pw-bar"></div></div>
+                        
+                        <div class="section-title">Dados da Empresa</div>
+                        <label>Nome da Empresa:</label><input type="text" id="f_nome">
+                        <div style="display:flex; gap:10px;">
+                            <div style="flex:1"><label>CNPJ (14 dígitos):</label><input type="text" id="f_doc" maxlength="14"></div>
+                            <div style="flex:1">
+                                <label>Área:</label>
+                                <select id="f_area" onchange="checkOutro(this.value)">
+                                    <option value="Tecnologia">Tecnologia</option><option value="Saúde">Saúde</option><option value="Outros">Outros...</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="d_outro" class="hidden"><label>Especifique:</label><input type="text" id="f_outro"></div>
+                        <label>Descrição Curta:</label><textarea id="f_desc" rows="2"></textarea>
+                        <button class="btn-action" onclick="finalizarCadastro()">CADASTRAR E ENTRAR</button>
                     </div>
                 </div>`;
             } else {
-                container.innerHTML = `
+                area.innerHTML = `
                 <div class="form-container">
-                    <div class="form-header">Cadastro Candidato</div>
+                    <div class="form-header">Cadastro de Candidato</div>
                     <div class="form-body">
-                        <label>E-mail:</label><input type="email" id="f_email">
-                        <label>Senha:</label><input type="password" id="f_senha">
+                        <div class="section-title">Dados de Login</div>
+                        <label>E-mail Pessoal:</label><input type="email" id="f_email">
+                        <label>Senha:</label>
+                        <input type="password" id="f_pass" oninput="validarPw(this.value)">
+                        <div class="pw-meter"><div id="pw-bar" class="pw-bar"></div></div>
+
+                        <div class="section-title">Dados Pessoais</div>
                         <label>Nome Completo:</label><input type="text" id="f_nome">
-                        <label>CPF:</label><input type="text" id="f_doc" maxlength="11">
+                        <div style="display:flex; gap:10px;">
+                            <div style="flex:1"><label>CPF (11 dígitos):</label><input type="text" id="f_doc" maxlength="11"></div>
+                            <div style="flex:1"><label>Telefone:</label><input type="text" id="f_tel"></div>
+                        </div>
                         <label>LinkedIn (Opcional):</label><input type="text" id="f_link">
-                        <button class="btn-enviar" onclick="salvarBD()">CADASTRAR CURRÍCULO</button>
+                        <button class="btn-action" onclick="finalizarCadastro()">CADASTRAR E ENTRAR</button>
                     </div>
                 </div>`;
             }
         }
 
-        async function salvarBD() {
-            const tabela = tipoUsuario === 'empresa' ? 'empresas' : 'candidatos';
-            const dados = {
-                email: document.getElementById('f_email').value,
-                [tipoUsuario === 'empresa' ? 'nome_empresa' : 'nome_completo']: document.getElementById('f_nome').value,
-                [tipoUsuario === 'empresa' ? 'cnpj' : 'cpf']: document.getElementById('f_doc').value
-            };
-            const { error } = await _supabase.from(tabela).insert([dados]);
-            if (error) alert(error.message);
-            else { alert("Cadastro realizado!"); mostrarTela('entrar'); }
+        function validarPw(s) {
+            const b = document.getElementById('pw-bar');
+            const forte = s.length > 6 && /[A-Z]/.test(s) && /[0-9]/.test(s) && /[^A-Za-z0-9]/.test(s);
+            if (forte) { b.style.width="100%"; b.style.background="#2ecc71"; }
+            else if (s.length > 4) { b.style.width="50%"; b.style.background="#f1c40f"; }
+            else { b.style.width="20%"; b.style.background="#e74c3c"; }
         }
 
-        function simularLogin(tipo) {
+        function checkOutro(v) { document.getElementById('d_outro').className = v === 'Outros' ? '' : 'hidden'; }
+
+        async function finalizarCadastro() {
+            const tabela = userTipo === 'empresa' ? 'empresas' : 'candidatos';
+            const nome = document.getElementById('f_nome').value;
+            const doc = document.getElementById('f_doc').value;
+            const email = document.getElementById('f_email').value;
+
+            const dados = {
+                email: email,
+                [userTipo === 'empresa' ? 'nome_empresa' : 'nome_completo']: nome,
+                [userTipo === 'empresa' ? 'cnpj' : 'cpf']: doc
+            };
+
+            const { error } = await _supabase.from(tabela).insert([dados]);
+            if (error) alert("Erro: " + error.message);
+            else {
+                alert("Cadastro realizado! Bem-vindo(a).");
+                entrarNoSistema(userTipo, nome);
+            }
+        }
+
+        function entrarNoSistema(tipo, nome) {
             document.getElementById('menu-visitante').classList.add('hidden');
-            document.getElementById('display-nome').innerText = tipo === 'empresa' ? "Empresa Parceira" : "Candidato Ativo";
             document.getElementById('menu-' + tipo).classList.remove('hidden');
+            document.getElementById('side-nome').innerText = nome;
             mostrarTela('dashboard');
         }
 
-        function abrirFormVaga() {
+        function loginFake(tipo) { entrarNoSistema(tipo, tipo === 'empresa' ? 'Empresa Logada' : 'Candidato Logado'); }
+
+        function abrirNovaVaga() {
             mostrarTela('form');
-            document.getElementById('container-dinamico').innerHTML = `
+            document.getElementById('area-form').innerHTML = `
                 <div class="form-container">
-                    <div class="form-header">Publicar Nova Vaga</div>
+                    <div class="form-header">Publicar Nova Oportunidade</div>
                     <div class="form-body">
-                        <label>Título da Vaga:</label><input type="text" id="v_titulo">
-                        <label>Salário:</label><input type="text" id="v_salario">
-                        <label>Descrição:</label><textarea id="v_desc" rows="4"></textarea>
-                        <button class="btn-enviar" onclick="postarVaga()">PUBLICAR AGORA</button>
+                        <label>Título do Cargo:</label><input type="text" id="v_tit">
+                        <label>Salário Sugerido:</label><input type="text" id="v_sal">
+                        <label>Descrição e Requisitos:</label><textarea id="v_desc" rows="5"></textarea>
+                        <button class="btn-action" onclick="salvarVaga()">PUBLICAR VAGA</button>
                     </div>
                 </div>`;
+            if(document.getElementById('sidebar').classList.contains('active')) toggleMenu();
         }
 
-        async function postarVaga() {
-            const dados = {
-                titulo_vaga: document.getElementById('v_titulo').value,
-                salario: document.getElementById('v_salario').value,
+        async function salvarVaga() {
+            const { error } = await _supabase.from('vagas').insert([{
+                titulo_vaga: document.getElementById('v_tit').value,
+                salario: document.getElementById('v_sal').value,
                 descricao_vaga: document.getElementById('v_desc').value,
-                nome_empresa: "Empresa Teste"
-            };
-            const { error } = await _supabase.from('vagas').insert([dados]);
+                nome_empresa: document.getElementById('side-nome').innerText
+            }]);
             if (error) alert(error.message);
-            else { alert("Vaga publicada!"); mostrarTela('dashboard'); }
+            else { alert("Vaga publicada com sucesso!"); mostrarTela('dashboard'); }
         }
     </script>
 </body>
