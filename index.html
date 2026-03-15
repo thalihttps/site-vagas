@@ -13,8 +13,6 @@
         .sidebar { position: fixed; left: -280px; top: 0; width: 280px; height: 100%; background: white; box-shadow: 2px 0 10px rgba(0,0,0,0.1); transition: 0.3s; z-index: 1001; padding-top: 80px; }
         .sidebar.active { left: 0; }
         .menu-item { display: flex; align-items: center; padding: 15px 25px; color: #333; cursor: pointer; font-size: 14px; border-bottom: 1px solid #f0f0f0; }
-        .menu-item:hover { background: #f0f7ff; color: #0d47a1; }
-        .menu-item i { margin-right: 15px; width: 20px; text-align: center; }
         .btn-menu { background: none; border: none; color: white; font-size: 24px; cursor: pointer; display: none; }
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); display: none; z-index: 999; }
         .overlay.active { display: block; }
@@ -27,12 +25,13 @@
         .btn-acao { width: 100%; background: #0d47a1; color: white; border: none; padding: 14px; border-radius: 8px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
         .card-balao { background: white; color: #0d47a1; padding: 40px 50px; border-radius: 60px; box-shadow: 0 8px 15px rgba(0,0,0,0.1); border: 2px solid transparent; cursor: pointer; font-weight: bold; margin: 10px; text-transform: uppercase; width: 300px; }
         .req-item { display: flex; justify-content: space-between; padding: 8px; background: #f0f7ff; margin-bottom: 5px; border-radius: 5px; border: 1px solid #d1e9ff; }
-        .profile-pic { width: 120px; height: 120px; border-radius: 50%; border: 3px solid #0d47a1; object-fit: cover; display: block; margin: 0 auto 20px; background: #eee; }
+        .profile-pic { width: 120px; height: 120px; border-radius: 50%; border: 3px solid #0d47a1; object-fit: cover; display: block; margin: 0 auto 10px; background: #eee; }
         .meter { height: 5px; background: #eee; margin-top: -10px; margin-bottom: 15px; border-radius: 3px; overflow: hidden; }
         .meter-bar { height: 100%; width: 0; transition: 0.3s; }
     </style>
 </head>
 <body>
+
     <nav class="navbar">
         <div style="display: flex; align-items: center;">
             <button class="btn-menu" id="btn-hamburguer" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
@@ -42,10 +41,12 @@
             <span onclick="mostrarTela('login-empresa')">Entre como Empresa</span> | <span onclick="mostrarTela('login-candidato')">Entre como Candidato</span>
         </div>
     </nav>
+
     <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+
     <div class="sidebar" id="sidebar">
         <div id="menu-contextual"></div>
-        <div class="menu-item" onclick="location.reload()" style="color:red"><i class="fas fa-power-off"></i> Sair</div>
+        <div class="menu-item" onclick="location.reload()" style="color: red; border-top: 2px solid #f0f0f0;"><i class="fas fa-power-off"></i> Sair</div>
     </div>
 
     <div class="main-container">
@@ -70,10 +71,8 @@
         <div id="cad-candidato" class="hidden">
             <div class="box-container">
                 <h2>Cadastro Candidato</h2>
-                <label>E-mail Pessoal:</label><input type="email" id="c_email">
-                <label>Senha:</label><input type="password" oninput="medirSenha(this.value, 'm2')"><div class="meter"><div id="m2" class="meter-bar"></div></div>
-                <label>Nome Completo:</label><input type="text" id="c_nome">
-                <label>CPF:</label><input type="text" maxlength="11" id="c_cpf">
+                <label>E-mail Pessoal:</label><input type="email"><label>Senha:</label><input type="password" oninput="medirSenha(this.value, 'm2')"><div class="meter"><div id="m2" class="meter-bar"></div></div>
+                <label>Nome Completo:</label><input type="text"><label>CPF:</label><input type="text" maxlength="11">
                 <button class="btn-acao" onclick="executarEntrada('candidato')">CADASTRAR E ENTRAR</button>
             </div>
         </div>
@@ -81,59 +80,57 @@
         <div id="login-empresa" class="hidden"><div class="box-container"><h2>Login Empresa</h2><label>E-mail/CNPJ</label><input type="text"><label>Senha</label><input type="password"><button class="btn-acao" onclick="executarEntrada('empresa')">ENTRAR</button></div></div>
         <div id="login-candidato" class="hidden"><div class="box-container"><h2>Login Candidato</h2><label>E-mail/CPF</label><input type="text"><label>Senha</label><input type="password"><button class="btn-acao" onclick="executarEntrada('candidato')">ENTRAR</button></div></div>
 
-        <div id="dashboard" class="hidden"><div class="box-container"><h2>Bem-vindo!</h2><p>Use o menu lateral (☰) para navegar.</p></div></div>
+        <div id="dashboard" class="hidden"><div class="box-container"><h2>Bem-vindo!</h2><p>Abra o menu lateral (☰) para navegar.</p></div></div>
+
+        <div id="perfil-empresa" class="hidden">
+            <div class="box-container">
+                <h2>Perfil da Empresa</h2>
+                <div style="text-align:center">
+                    <img src="https://via.placeholder.com/150" class="profile-pic" id="foto-e-prev">
+                    <label style="color:#0d47a1; cursor:pointer; font-size:12px">Alterar Logo<input type="file" style="display:none" onchange="previewImg(this, 'foto-e-prev')"></label>
+                </div>
+                <label>Descrição:</label><textarea id="e_perf_desc" rows="4"></textarea>
+                
+                <label>Requisitos/Valores da Empresa (+):</label>
+                <div style="display:flex; gap:10px;"><input type="text" id="req_p_input" style="margin:0"><button class="btn-acao" style="width:50px" onclick="addDinamico('req_p_input', 'lista-p', reqsP)">+</button></div>
+                <div id="lista-p" style="margin-top:10px"></div>
+
+                <label>País:</label><input type="text" placeholder="Brasil"><label>Estado:</label><input type="text"><label>Cidade:</label><input type="text">
+                <button class="btn-acao">ATUALIZAR PERFIL</button>
+            </div>
+        </div>
 
         <div id="perfil-candidato" class="hidden">
             <div class="box-container">
                 <h2>Meu Perfil</h2>
-                <img src="https://via.placeholder.com/150" class="profile-pic">
-                <label>País</label><input type="text"><label>Estado</label><input type="text">
-                <label>Escolaridade</label>
+                <div style="text-align:center">
+                    <img src="https://via.placeholder.com/150" class="profile-pic" id="foto-c-prev">
+                    <label style="color:#0d47a1; cursor:pointer; font-size:12px">Alterar Foto<input type="file" style="display:none" onchange="previewImg(this, 'foto-c-prev')"></label>
+                </div>
+                <label>País:</label><input type="text" placeholder="Brasil"><label>Estado:</label><input type="text"><label>Cidade:</label><input type="text">
+                <label>Escolaridade:</label>
                 <select>
-                    <option>Ensino Fundamental Cursando</option><option>Ensino Fundamental Completo</option>
-                    <option>Ensino Médio Cursando</option><option>Ensino Médio Completo</option>
-                    <option>Ensino Técnico Cursando</option><option>Ensino Técnico Completo</option>
-                    <option>Ensino Superior Cursando</option><option>Ensino Superior Completo</option>
-                    <option>Pós-Graduação Cursando</option><option>Pós-Graduação Completo</option>
-                    <option>Mestrado Cursando</option><option>Mestrado Completo</option>
-                    <option>Doutorado Cursando</option><option>Doutorado Completo</option>
-                    <option>MBA Cursando</option><option>MBA Completo</option>
+                    <option>Ensino Fundamental Cursando</option><option>Ensino Fundamental Completo</option><option>Ensino Médio Cursando</option><option>Ensino Médio Completo</option><option>Ensino Técnico Cursando</option><option>Ensino Técnico Completo</option><option>Ensino Superior Cursando</option><option>Ensino Superior Completo</option><option>Pós-Graduação Cursando</option><option>Pós-Graduação Completo</option><option>Mestrado Cursando</option><option>Mestrado Completo</option><option>Doutorado Cursando</option><option>Doutorado Completo</option><option>MBA Cursando</option><option>MBA Completo</option>
                 </select>
-                <button class="btn-acao">Salvar Perfil</button>
-            </div>
-        </div>
-
-        <div id="perfil-empresa" class="hidden">
-            <div class="box-container">
-                <h2>Perfil Empresa</h2>
-                <img src="https://via.placeholder.com/150" class="profile-pic">
-                <label>Descrição</label><textarea id="e_perf_desc" rows="4"></textarea>
-                <label>Requisitos Empresa (+)</label>
-                <div style="display:flex;gap:10px"><input type="text" id="req_p_input" style="margin:0"><button class="btn-acao" style="width:50px" onclick="addDinamico('req_p_input','lista-p',reqsP)">+</button></div>
-                <div id="lista-p" style="margin-top:10px"></div>
-                <button class="btn-acao">Atualizar Perfil</button>
+                <button class="btn-acao">SALVAR PERFIL</button>
             </div>
         </div>
 
         <div id="publicar-vagas" class="hidden">
             <div class="box-container">
-                <h2>Publicar Vaga</h2>
-                <label>Nome da vaga</label><input type="text" id="v_nome">
-                <label>Salário</label><input type="text" id="v_salario">
-                <label>Localidade</label><input type="text" id="v_local">
-                <label>Requisitos (+)</label>
-                <div style="display:flex;gap:10px"><input type="text" id="req_v_input" style="margin:0"><button class="btn-acao" style="width:50px" onclick="addDinamico('req_v_input','lista-v',reqsV)">+</button></div>
+                <h2>Publicar Nova Vaga</h2>
+                <label>Nome da vaga:</label><input type="text" id="v_nome">
+                <label>Salário:</label><input type="text" id="v_salario">
+                <label>Localidade:</label><input type="text" id="v_local">
+                <label>Requisitos (+):</label>
+                <div style="display:flex; gap:10px;"><input type="text" id="req_v_input" style="margin:0"><button class="btn-acao" style="width:50px" onclick="addDinamico('req_v_input', 'lista-v', reqsV)">+</button></div>
                 <div id="lista-v" style="margin-top:10px"></div>
-                <button class="btn-acao" style="margin-top:20px" onclick="alert('Publicado!')">PUBLIAR VAGA</button>
+                <button class="btn-acao" style="margin-top:20px" onclick="alert('Vaga Publicada!')">PUBLICAR VAGA</button>
             </div>
         </div>
     </div>
 
     <script>
-        const SB_URL = 'https://somngtdevyazwqonmayo.supabase.co'; 
-        const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNvbW5ndGRldnlhendxb25tYXlvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM1MTk2NTQsImV4cCI6MjA4OTA5NTY1NH0.RGf3ZMVw6n4GyIVroBBUoD7dmKQAOReUuAsew0DVBVw'; 
-        const _supabase = supabase.createClient(SB_URL, SB_KEY);
-
         let reqsP = []; let reqsV = [];
 
         function mostrarTela(id) {
@@ -144,35 +141,37 @@
         function executarEntrada(tipo) {
             document.getElementById('nav-links').classList.add('hidden');
             document.getElementById('btn-hamburguer').style.display = 'block';
-            const menu = document.getElementById('menu-contextual');
             if(tipo === 'empresa') {
-                menu.innerHTML = `<div class="menu-item" onclick="mostrarTela('perfil-empresa');toggleSidebar()"><i class="fas fa-user-circle"></i> Perfil</div><div class="menu-item" onclick="mostrarTela('publicar-vagas');toggleSidebar()"><i class="fas fa-briefcase"></i> Publicar Vagas</div>`;
-            } else {
-                menu.innerHTML = `<div class="menu-item" onclick="mostrarTela('perfil-candidato');toggleSidebar()"><i class="fas fa-user-circle"></i> Perfil</div>`;
+                document.getElementById('e_perf_desc').value = document.getElementById('e_desc_cad').value;
             }
+            const menu = document.getElementById('menu-contextual');
+            menu.innerHTML = tipo === 'empresa' ? 
+                `<div class="menu-item" onclick="mostrarTela('perfil-empresa');toggleSidebar()"><i class="fas fa-user-circle"></i> Meu Perfil</div>
+                 <div class="menu-item" onclick="mostrarTela('publicar-vagas');toggleSidebar()"><i class="fas fa-briefcase"></i> Publicar Vagas</div>` :
+                `<div class="menu-item" onclick="mostrarTela('perfil-candidato');toggleSidebar()"><i class="fas fa-user-circle"></i> Meu Perfil</div>`;
             mostrarTela('dashboard');
         }
 
         function addDinamico(idIn, idLis, arr) {
             const val = document.getElementById(idIn).value;
             if(!val) return;
-            arr.push(val);
-            document.getElementById(idIn).value = "";
+            arr.push(val); document.getElementById(idIn).value = "";
             renderList(idLis, arr);
         }
 
         function renderList(idLis, arr) {
             document.getElementById(idLis).innerHTML = arr.map((r, i) => `
-                <div class="req-item"><span>• ${r}</span><i class="fas fa-trash" style="color:red;cursor:pointer" onclick="removerItem('${idLis}',${i})"></i></div>
+                <div class="req-item"><span>• ${r}</span><i class="fas fa-trash" style="color:red;cursor:pointer" onclick="remover('${idLis}', ${i})"></i></div>
             `).join('');
         }
 
-        function removerItem(idLis, i) {
+        function remover(idLis, i) {
             let arr = (idLis === 'lista-p') ? reqsP : reqsV;
-            arr.splice(i, 1);
-            renderList(idLis, arr);
+            arr.splice(i, 1); renderList(idLis, arr);
         }
 
+        function previewImg(input, id) { if(input.files && input.files[0]) { var r = new FileReader(); r.onload = function(e){document.getElementById(id).src=e.target.result;}; r.readAsDataURL(input.files[0]); } }
+        
         function medirSenha(s, id) {
             const b = document.getElementById(id);
             b.style.width = s.length > 7 ? "100%" : s.length > 4 ? "50%" : "20%";
@@ -182,23 +181,4 @@
         function toggleSidebar() { document.getElementById('sidebar').classList.toggle('active'); document.getElementById('overlay').classList.toggle('active'); }
     </script>
 </body>
-</html>argin-bottom: 40px;">CONNECTER</h1>
-            <button class="card-balao" onclick="mostrarTela('cad-empresa')">Cadastre-se Empresa</button>
-            <button class="card-balao" onclick="mostrarTela('cad-candidato')">Cadastre-se Candidato</button>
-        </div>
-
-        <div id="cad-empresa" class="hidden"><div class="box-container"><h2>Cadastro Empresa</h2><label>E-mail Corporativo</label><input type="email"><label>Senha</label><input type="password"><label>Nome Empresa</label><input type="text"><label>CNPJ</label><input type="text" maxlength="14"><label>Descrição</label><textarea rows="3"></textarea><button class="btn-acao" onclick="executarEntrada('empresa')">CADASTRAR</button></div></div>
-
-        <div id="cad-candidato" class="hidden"><div class="box-container"><h2>Cadastro Candidato</h2><label>E-mail Pessoal</label><input type="email"><label>Senha</label><input type="password"><label>Nome Completo</label><input type="text"><label>CPF</label><input type="text" maxlength="11"><button class="btn-acao" onclick="executarEntrada('candidato')">CADASTRAR</button></div></div>
-
-        <div id="login-empresa" class="hidden"><div class="box-container"><h2>Login Empresa</h2><label>E-mail/CNPJ</label><input type="text"><label>Senha</label><input type="password"><button class="btn-acao" onclick="executarEntrada('empresa')">ENTRAR</button></div></div>
-        <div id="login-candidato" class="hidden"><div class="box-container"><h2>Login Candidato</h2><label>E-mail/CPF</label><input type="text"><label>Senha</label><input type="password"><button class="btn-acao" onclick="executarEntrada('candidato')">ENTRAR</button></div></div>
-
-        <div id="dashboard" class="hidden"><div class="box-container"><h2>Bem-vindo!</h2><p>Use a Sidebar (☰) para navegar.</p></div></div>
-
-        <div id="perfil-candidato" class="hidden"><div class="box-container"><h2>Meu Perfil</h2><img src="https://via.placeholder.com/150" class="profile-pic"><label>País</label><input type="text"><label>Estado</label><input type="text"><label>Escolaridade</label><select><option>Ensino Fundamental Cursando</option><option>Ensino Fundamental Completo</option><option>Ensino Médio Cursando</option><option>Ensino Médio Completo</option><option>Ensino Técnico Cursando</option><option>Ensino Técnico Completo</option><option>Ensino Superior Cursando</option><option>Ensino Superior Completo</option><option>Pós-Graduação Cursando</option><option>Pós-Graduação Completo</option><option>Mestrado Cursando</option><option>Mestrado Completo</option><option>Doutorado Cursando</option><option>Doutorado Completo</option><option>MBA Cursando</option><option>MBA Completo</option></select><button class="btn-acao">Salvar</button></div></div>
-
-        <div id="perfil-empresa" class="hidden"><div class="box-container"><h2>Perfil Empresa</h2><img src="https://via.placeholder.com/150" class="profile-pic"><label>Descrição</label><textarea rows="4"></textarea><label>Requisitos Empresa (+)</label><div style="display:flex;gap:10px"><input type="text" id="req_p_input" style="margin:0"><button class="btn-acao" style="width:50px" onclick="addDinamico('req_p_input','lista-p',reqsP)">+</button></div><div id="lista-p" style="margin-top:10px"></div><button class="btn-acao">Atualizar</button></div></div>
-
-        <div id="publicar-vagas" class="hidden"><div class="box-container"><h2>Publicar Vaga</h2><label>Nome da vaga</label><input type="text"><label>Salário</label><input type="text"><label>Localidade</label><input type="text"><label>Requisitos (+)</label><div style="display:flex;gap:10px"><input type="text" id="req_v_input" style="margin:0"><button class="btn-acao" style="width:50px" onclick="addDinamico('req_v_input','lista-v',reqsV)">+</button></div><div id="lista-v" style="margin-top:10px"></div><button class="btn-acao" style="margin-top:20px" onclick="alert('Publicado!')">PUBLICAR</button></div></div>
-    </div>
+</html>
