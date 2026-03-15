@@ -9,25 +9,21 @@
         body { margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; background-color: #e3f2fd; min-height: 100vh; display: flex; flex-direction: column; }
         .navbar { position: absolute; top: 0; width: 100%; display: flex; justify-content: space-between; padding: 20px 40px; box-sizing: border-box; font-size: 13px; font-weight: bold; color: #555; }
         .nav-links span { cursor: pointer; margin: 0 15px; text-transform: uppercase; }
-        .nav-links span:hover { color: #0d47a1; }
         .main-container { flex: 1; display: flex; justify-content: center; align-items: center; padding: 40px; margin-top: 60px; }
         .hero-section { text-align: center; }
         .hero-title { color: #0d47a1; margin-bottom: 30px; font-size: 2rem; }
         .card-balao { background-color: #ffffff; color: #0d47a1; padding: 35px 50px; border-radius: 60px; box-shadow: 0 8px 15px rgba(0,0,0,0.1); transition: all 0.2s ease; border: none; cursor: pointer; text-transform: uppercase; font-weight: bold; margin: 0 10px; }
-        .card-balao:active { transform: translateY(5px); }
-        .form-cadastro { background: #f8f9fa; border-radius: 8px; width: 100%; max-width: 600px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); border: 1px solid #ccc; overflow: hidden; }
-        .form-header { background: #cedce7; padding: 15px 20px; color: #333; font-weight: bold; border-bottom: 1px solid #abbbc8; }
+        .form-cadastro { background: #f8f9fa; border-radius: 8px; width: 100%; max-width: 550px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); border: 1px solid #ccc; overflow: hidden; }
+        .form-header { background: #cedce7; padding: 15px 20px; color: #333; font-weight: bold; border-bottom: 1px solid #abbbc8; text-align: left; }
         .form-body { padding: 25px; text-align: left; }
-        .section-title { background: #dee2e6; padding: 6px 12px; margin: 15px 0 10px 0; font-size: 12px; color: #0d47a1; font-weight: bold; text-transform: uppercase; }
+        .section-title { background: #dee2e6; padding: 6px 12px; margin: 15px 0 10px 0; font-size: 11px; color: #0d47a1; font-weight: bold; text-transform: uppercase; }
         label { display: block; font-size: 12px; margin-bottom: 4px; color: #444; font-weight: bold; }
-        input, select { width: 100%; padding: 10px; margin-bottom: 12px; border: 1px solid #bbb; border-radius: 4px; box-sizing: border-box; }
+        input { width: 100%; padding: 10px; margin-bottom: 12px; border: 1px solid #bbb; border-radius: 4px; box-sizing: border-box; }
         .row { display: flex; gap: 15px; }
         .col { flex: 1; }
         .password-meter { height: 6px; background-color: #ddd; border-radius: 3px; margin-top: -8px; margin-bottom: 5px; overflow: hidden; }
         .meter-bar { height: 100%; width: 0%; transition: width 0.3s; }
-        .meter-text { font-size: 10px; font-weight: bold; margin-bottom: 10px; display: block; }
         .btn-primary { background-color: #1a73e8; color: white; border: none; padding: 12px 25px; border-radius: 4px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 10px; }
-        .forgot-pw { display: block; margin-top: 10px; font-size: 12px; color: #1976d2; text-decoration: none; text-align: center; }
         .hidden { display: none !important; }
     </style>
 </head>
@@ -35,8 +31,7 @@
 
     <nav class="navbar">
         <div class="nav-links">
-            <span onclick="mostrarTela('entrar')">Entrar</span> | 
-            <span onclick="mostrarTela('inicial')">Cadastre-se</span>
+            <span onclick="mudarTela('entrar')">Entrar</span> | <span onclick="mudarTela('inicial')">Cadastre-se</span>
         </div>
         <div class="nav-links">
             <span>Dúvidas</span> | <span>Suporte</span>
@@ -46,20 +41,18 @@
     <div class="main-container">
         <div id="tela-inicial" class="hero-section">
             <h1 class="hero-title">Bem-vindo ao Portal Conecta</h1>
-            <button class="card-balao" onclick="abrirForm('empresa')">Sou Empresa</button>
-            <button class="card-balao" onclick="abrirForm('candidato')">Sou Candidato</button>
+            <button class="card-balao" onclick="exibirFormulario('empresa')">Sou Empresa</button>
+            <button class="card-balao" onclick="exibirFormulario('candidato')">Sou Candidato</button>
         </div>
 
         <div id="tela-entrar" class="hero-section hidden">
             <h1 class="hero-title">Acessar Conta</h1>
-            <button class="card-balao" onclick="abrirLogin('empresa')">Login Empresa</button>
-            <button class="card-balao" onclick="abrirLogin('candidato')">Login Candidato</button>
-            <br><br>
-            <a href="#" onclick="mostrarTela('inicial')" style="color:#1976d2">Ainda não tem conta? Cadastre-se</a>
+            <button class="card-balao" onclick="exibirLogin('empresa')">Login Empresa</button>
+            <button class="card-balao" onclick="exibirLogin('candidato')">Login Candidato</button>
         </div>
 
         <div id="tela-form" class="hidden">
-            <div id="container-conteudo"></div>
+            <div id="conteudo-dinamico"></div>
         </div>
     </div>
 
@@ -67,56 +60,89 @@
         const SB_URL = 'https://somngtdevyazwqonmayo.supabase.co'; 
         const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNvbW5ndGRldnlhendxb25tYXlvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM1MTk2NTQsImV4cCI6MjA4OTA5NTY1NH0.RGf3ZMVw6n4GyIVroBBUoD7dmKQAOReUuAsew0DVBVw'; 
         const _supabase = supabase.createClient(SB_URL, SB_KEY);
-        let tipoAtual = '';
+        let tipoGlobal = '';
 
-        function mostrarTela(id) {
+        function mudarTela(id) {
             document.getElementById('tela-inicial').classList.add('hidden');
             document.getElementById('tela-entrar').classList.add('hidden');
             document.getElementById('tela-form').classList.add('hidden');
-            if(id === 'inicial') document.getElementById('tela-inicial').classList.remove('hidden');
-            else if(id === 'entrar') document.getElementById('tela-entrar').classList.remove('hidden');
-            else document.getElementById('tela-form').classList.remove('hidden');
+            document.getElementById('tela-' + id).classList.remove('hidden');
         }
 
-        function abrirForm(tipo) {
-            tipoAtual = tipo;
-            mostrarTela('form');
-            const container = document.getElementById('container-conteudo');
+        function exibirFormulario(tipo) {
+            tipoGlobal = tipo;
+            mudarTela('form');
+            const box = document.getElementById('conteudo-dinamico');
             
             if(tipo === 'empresa') {
-                container.innerHTML = `
+                box.innerHTML = `
                 <div class="form-cadastro">
                     <div class="form-header">Cadastro de Empresa</div>
                     <div class="form-body">
                         <div class="section-title">Dados de Login</div>
-                        <label>E-mail Corporativo:</label><input type="email" id="f_email">
+                        <label>E-mail Corporativo:</label><input type="email" id="i_email">
                         <label>Crie uma Senha:</label>
-                        <input type="password" id="f_senha" oninput="testarSenha(this.value)">
-                        <div class="password-meter"><div id="m-bar" class="meter-bar"></div></div>
-                        <span id="m-text" class="meter-text"></span>
+                        <input type="password" id="i_senha" oninput="medirSenha(this.value)">
+                        <div class="password-meter"><div id="bar" class="meter-bar"></div></div>
+                        <p id="msg-senha" style="font-size:10px; font-weight:bold; margin:0 0 10px 0;"></p>
 
-                        <div class="section-title">Dados da Organização</div>
-                        <label>Nome da Empresa:</label><input type="text" id="f_nome">
+                        <div class="section-title">Dados da Empresa</div>
+                        <label>Nome:</label><input type="text" id="i_nome">
                         <div class="row">
-                            <div class="col"><label>CNPJ (14 dígitos):</label><input type="text" id="f_cnpj" maxlength="14"></div>
-                            <div class="col"><label>Telefone (Opcional):</label><input type="text" id="f_tel"></div>
+                            <div class="col"><label>CNPJ (14 nº):</label><input type="text" id="i_doc" maxlength="14"></div>
+                            <div class="col"><label>Telefone (Opcional):</label><input type="text" id="i_tel"></div>
                         </div>
-                        <button class="btn-primary" onclick="cadastrar()">CONCLUIR CADASTRO</button>
+                        <button class="btn-primary" onclick="salvar()">CADASTRAR</button>
                     </div>
                 </div>`;
             } else {
-                container.innerHTML = `
+                box.innerHTML = `
                 <div class="form-cadastro">
                     <div class="form-header">Cadastro de Candidato</div>
                     <div class="form-body">
                         <div class="section-title">Dados de Login</div>
-                        <label>E-mail de Acesso:</label><input type="email" id="f_email">
-                        <label>Crie sua Senha:</label>
-                        <input type="password" id="f_senha" oninput="testarSenha(this.value)">
-                        <div class="password-meter"><div id="m-bar" class="meter-bar"></div></div>
-                        <span id="m-text" class="meter-text"></span>
+                        <label>E-mail:</label><input type="email" id="i_email">
+                        <label>Senha:</label>
+                        <input type="password" id="i_senha" oninput="medirSenha(this.value)">
+                        <div class="password-meter"><div id="bar" class="meter-bar"></div></div>
+                        <p id="msg-senha" style="font-size:10px; font-weight:bold; margin:0 0 10px 0;"></p>
 
                         <div class="section-title">Dados Pessoais</div>
-                        <label>Nome Completo:</label><input type="text" id="f_nome">
+                        <label>Nome Completo:</label><input type="text" id="i_nome">
                         <div class="row">
-                            <div class="col"><label>CPF (11 dígitos):</label><input type="text" id="f_
+                            <div class="col"><label>CPF (11 nº):</label><input type="text" id="i_doc" maxlength="11"></div>
+                            <div class="col"><label>Telefone:</label><input type="text" id="i_tel"></div>
+                        </div>
+                        <label>LinkedIn:</label><input type="text" id="i_link">
+                        <button class="btn-primary" onclick="salvar()">CADASTRAR CURRÍCULO</button>
+                    </div>
+                </div>`;
+            }
+        }
+
+        function medirSenha(s) {
+            const b = document.getElementById('bar');
+            const m = document.getElementById('msg-senha');
+            const forte = s.length > 6 && /[A-Z]/.test(s) && /[0-9]/.test(s) && /[^A-Za-z0-9]/.test(s);
+            const media = s.length >= 4 && /[0-9]/.test(s);
+
+            if (forte) { b.style.width="100%"; b.style.backgroundColor="#2ecc71"; m.innerText="Senha Forte"; m.style.color="#2ecc71"; }
+            else if (media) { b.style.width="60%"; b.style.backgroundColor="#f1c40f"; m.innerText="Senha Moderada"; m.style.color="#f1c40f"; }
+            else { b.style.width="30%"; b.style.backgroundColor="#ff4d4d"; m.innerText="Senha Fraca"; m.style.color="#ff4d4d"; }
+        }
+
+        async function salvar() {
+            const tabela = tipoGlobal === 'empresa' ? 'empresas' : 'candidatos';
+            const dados = {
+                email: document.getElementById('i_email').value,
+                [tipoGlobal === 'empresa' ? 'nome_empresa' : 'nome_completo']: document.getElementById('i_nome').value,
+                [tipoGlobal === 'empresa' ? 'cnpj' : 'cpf']: document.getElementById('i_doc').value
+            };
+
+            const { error } = await _supabase.from(tabela).insert([dados]);
+            if (error) alert("Erro: " + error.message);
+            else { alert("Salvo com sucesso!"); mudarTela('entrar'); }
+        }
+    </script>
+</body>
+</html>
