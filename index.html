@@ -3,44 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal de Vagas - Conecta</title>
+    <title>Portal Conecta - Vagas</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         body { margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; background-color: #e3f2fd; min-height: 100vh; display: flex; flex-direction: column; }
-        
-        /* Menu Superior */
         .navbar { position: absolute; top: 0; width: 100%; display: flex; justify-content: space-between; padding: 20px 40px; box-sizing: border-box; font-size: 13px; font-weight: bold; color: #555; }
-        .nav-links span { cursor: pointer; margin: 0 15px; text-transform: uppercase; transition: color 0.2s; }
+        .nav-links span { cursor: pointer; margin: 0 15px; text-transform: uppercase; }
         .nav-links span:hover { color: #0d47a1; }
-
-        .main-container { flex: 1; display: flex; justify-content: center; align-items: center; padding: 40px; margin-top: 50px; }
-        
-        /* Botões Iniciais */
+        .main-container { flex: 1; display: flex; justify-content: center; align-items: center; padding: 40px; margin-top: 60px; }
         .hero-section { text-align: center; }
         .hero-title { color: #0d47a1; margin-bottom: 30px; font-size: 2rem; }
-        .card-balao { background-color: #ffffff; color: #0d47a1; padding: 35px 50px; border-radius: 60px; box-shadow: 0 8px 15px rgba(0,0,0,0.1); transition: all 0.2s ease; border: none; cursor: pointer; text-transform: uppercase; font-weight: bold; font-size: 1rem; margin: 0 15px; }
-        .card-balao:active { transform: translateY(5px); box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
-
-        /* Formulários */
+        .card-balao { background-color: #ffffff; color: #0d47a1; padding: 35px 50px; border-radius: 60px; box-shadow: 0 8px 15px rgba(0,0,0,0.1); transition: all 0.2s ease; border: none; cursor: pointer; text-transform: uppercase; font-weight: bold; margin: 0 10px; }
+        .card-balao:active { transform: translateY(5px); }
         .form-cadastro { background: #f8f9fa; border-radius: 8px; width: 100%; max-width: 600px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); border: 1px solid #ccc; overflow: hidden; }
         .form-header { background: #cedce7; padding: 15px 20px; color: #333; font-weight: bold; border-bottom: 1px solid #abbbc8; }
-        .form-body { padding: 25px; }
+        .form-body { padding: 25px; text-align: left; }
         .section-title { background: #dee2e6; padding: 6px 12px; margin: 15px 0 10px 0; font-size: 12px; color: #0d47a1; font-weight: bold; text-transform: uppercase; }
-        
         label { display: block; font-size: 12px; margin-bottom: 4px; color: #444; font-weight: bold; }
-        input, select, textarea { width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #bbb; border-radius: 4px; box-sizing: border-box; }
+        input, select { width: 100%; padding: 10px; margin-bottom: 12px; border: 1px solid #bbb; border-radius: 4px; box-sizing: border-box; }
         .row { display: flex; gap: 15px; }
         .col { flex: 1; }
-
-        /* Barra de Senha */
-        .password-meter { height: 6px; background-color: #ddd; border-radius: 3px; margin-top: -10px; margin-bottom: 5px; overflow: hidden; }
+        .password-meter { height: 6px; background-color: #ddd; border-radius: 3px; margin-top: -8px; margin-bottom: 5px; overflow: hidden; }
         .meter-bar { height: 100%; width: 0%; transition: width 0.3s; }
         .meter-text { font-size: 10px; font-weight: bold; margin-bottom: 10px; display: block; }
-
-        .btn-primary { background-color: #1a73e8; color: white; border: none; padding: 12px 25px; border-radius: 4px; cursor: pointer; font-weight: bold; width: 100%; }
-        .btn-primary:hover { background-color: #1557b0; }
+        .btn-primary { background-color: #1a73e8; color: white; border: none; padding: 12px 25px; border-radius: 4px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 10px; }
         .forgot-pw { display: block; margin-top: 10px; font-size: 12px; color: #1976d2; text-decoration: none; text-align: center; }
-        
         .hidden { display: none !important; }
     </style>
 </head>
@@ -102,22 +89,18 @@
                     <div class="form-header">Cadastro de Empresa</div>
                     <div class="form-body">
                         <div class="section-title">Dados de Login</div>
-                        <label>E-mail Corporativo:</label><input type="email" id="e_email">
+                        <label>E-mail Corporativo:</label><input type="email" id="f_email">
                         <label>Crie uma Senha:</label>
-                        <input type="password" id="e_senha" oninput="testarSenha(this.value)">
+                        <input type="password" id="f_senha" oninput="testarSenha(this.value)">
                         <div class="password-meter"><div id="m-bar" class="meter-bar"></div></div>
                         <span id="m-text" class="meter-text"></span>
 
                         <div class="section-title">Dados da Organização</div>
-                        <label>Nome da Empresa:</label><input type="text" id="e_nome">
+                        <label>Nome da Empresa:</label><input type="text" id="f_nome">
                         <div class="row">
-                            <div class="col"><label>CNPJ (14 dígitos):</label><input type="text" id="e_cnpj" maxlength="14"></div>
-                            <div class="col">
-                                <label>Setor:</label>
-                                <select id="e_setor"><option value="Tecnologia">Tecnologia</option><option value="Saúde">Saúde</option><option value="Vendas">Vendas</option></select>
-                            </div>
+                            <div class="col"><label>CNPJ (14 dígitos):</label><input type="text" id="f_cnpj" maxlength="14"></div>
+                            <div class="col"><label>Telefone (Opcional):</label><input type="text" id="f_tel"></div>
                         </div>
-                        <label>Telefone (Opcional):</label><input type="text" id="e_tel">
                         <button class="btn-primary" onclick="cadastrar()">CONCLUIR CADASTRO</button>
                     </div>
                 </div>`;
@@ -126,83 +109,14 @@
                 <div class="form-cadastro">
                     <div class="form-header">Cadastro de Candidato</div>
                     <div class="form-body">
-                        <div class="section-title">Dados Pessoais</div>
-                        <label>Nome Completo:</label><input type="text" id="c_nome">
-                        <div class="row">
-                            <div class="col"><label>CPF (11 dígitos):</label><input type="text" id="c_cpf" maxlength="11"></div>
-                            <div class="col"><label>Telefone:</label><input type="text" id="c_tel"></div>
-                        </div>
-                        <label>LinkedIn (Opcional):</label><input type="url" id="c_link" placeholder="https://linkedin.com/in/seu-perfil">
-                        
                         <div class="section-title">Dados de Login</div>
-                        <label>E-mail (Login):</label><input type="email" id="c_email">
-                        <label>Crie uma Senha:</label>
-                        <input type="password" id="c_senha" oninput="testarSenha(this.value)">
+                        <label>E-mail de Acesso:</label><input type="email" id="f_email">
+                        <label>Crie sua Senha:</label>
+                        <input type="password" id="f_senha" oninput="testarSenha(this.value)">
                         <div class="password-meter"><div id="m-bar" class="meter-bar"></div></div>
                         <span id="m-text" class="meter-text"></span>
 
-                        <button class="btn-primary" onclick="cadastrar()">CADASTRAR MEU CURRÍCULO</button>
-                    </div>
-                </div>`;
-            }
-        }
-
-        function abrirLogin(tipo) {
-            mostrarTela('form');
-            const container = document.getElementById('container-conteudo');
-            const label1 = tipo === 'empresa' ? 'E-mail ou CNPJ' : 'E-mail ou CPF';
-            
-            container.innerHTML = `
-            <div class="form-cadastro" style="max-width:350px">
-                <div class="form-header">Login ${tipo.toUpperCase()}</div>
-                <div class="form-body">
-                    <label>${label1}:</label><input type="text">
-                    <label>Senha:</label><input type="password">
-                    <button class="btn-primary">ENTRAR</button>
-                    <a href="#" class="forgot-pw">Esqueceu a senha?</a>
-                </div>
-            </div>`;
-        }
-
-        function testarSenha(s) {
-            const b = document.getElementById('m-bar');
-            const t = document.getElementById('m-text');
-            if (!s) { b.style.width="0%"; t.innerText=""; return; }
-            
-            const forte = s.length > 6 && /[A-Z]/.test(s) && /[0-9]/.test(s) && /[^A-Za-z0-9]/.test(s);
-            const media = s.length >= 4 && /[0-9]/.test(s) && /[a-z]/.test(s);
-
-            if (forte) { b.style.width="100%"; b.style.backgroundColor="#2ecc71"; t.innerText="Senha Forte"; t.style.color="#2ecc71"; }
-            else if (media) { b.style.width="60%"; b.style.backgroundColor="#f1c40f"; t.innerText="Senha Moderada"; t.style.color="#f1c40f"; }
-            else { b.style.width="30%"; b.style.backgroundColor="#ff4d4d"; t.innerText="Senha Fraca"; t.style.color="#ff4d4d"; }
-        }
-
-        async function cadastrar() {
-            let dados = {};
-            let tabela = tipoAtual === 'empresa' ? 'empresas' : 'candidatos';
-
-            if(tipoAtual === 'empresa') {
-                const cnpj = document.getElementById('e_cnpj').value;
-                if(cnpj.length < 14) { alert("CNPJ incompleto"); return; }
-                dados = { 
-                    nome_empresa: document.getElementById('e_nome').value, 
-                    cnpj: cnpj, 
-                    setor: document.getElementById('e_setor').value 
-                };
-            } else {
-                const cpf = document.getElementById('c_cpf').value;
-                if(cpf.length < 11) { alert("CPF incompleto"); return; }
-                dados = { 
-                    nome_completo: document.getElementById('c_nome').value, 
-                    cpf: cpf,
-                    email: document.getElementById('c_email').value
-                };
-            }
-
-            const { error } = await _supabase.from(tabela).insert([dados]);
-            if (error) alert(error.message);
-            else { alert("Cadastro realizado com sucesso! Senha validada."); mostrarTela('entrar'); }
-        }
-    </script>
-</body>
-</html>
+                        <div class="section-title">Dados Pessoais</div>
+                        <label>Nome Completo:</label><input type="text" id="f_nome">
+                        <div class="row">
+                            <div class="col"><label>CPF (11 dígitos):</label><input type="text" id="f_
