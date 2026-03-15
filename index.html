@@ -9,15 +9,13 @@
     <style>
         body { margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; background-color: #e3f2fd; min-height: 100vh; overflow-x: hidden; }
         
-        /* Navbar Superior */
         .navbar { background: #0d47a1; color: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; position: fixed; width: 100%; top: 0; z-index: 1000; box-sizing: border-box; }
         .nav-links { font-size: 13px; font-weight: bold; letter-spacing: 1px; color: white; }
         .nav-links span { cursor: pointer; text-transform: uppercase; margin-left: 15px; }
 
-        /* Sidebar Restaurada */
         .sidebar { position: fixed; left: -280px; top: 0; width: 280px; height: 100%; background: white; box-shadow: 2px 0 10px rgba(0,0,0,0.1); transition: 0.3s; z-index: 1001; padding-top: 60px; }
         .sidebar.active { left: 0; }
-        .menu-item { display: flex; align-items: center; padding: 15px 25px; color: #333; cursor: pointer; text-decoration: none; font-size: 14px; border-bottom: 1px solid #f0f0f0; }
+        .menu-item { display: flex; align-items: center; padding: 15px 25px; color: #333; cursor: pointer; font-size: 14px; border-bottom: 1px solid #f0f0f0; }
         .menu-item:hover { background: #f0f7ff; color: #0d47a1; }
         .menu-item i { margin-right: 15px; width: 20px; text-align: center; }
         
@@ -28,19 +26,19 @@
         .main-container { padding: 120px 20px; display: flex; flex-direction: column; align-items: center; text-align: center; }
         .hidden { display: none !important; }
 
-        /* Estilo dos Containers e Forms */
         .box-container { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 500px; text-align: left; margin-bottom: 20px; }
         .box-container h2 { margin: 0 0 20px; color: #0d47a1; font-size: 1.5rem; text-align: center; border-bottom: 2px solid #e3f2fd; padding-bottom: 10px; }
         label { display: block; font-size: 13px; margin-bottom: 5px; color: #555; font-weight: bold; }
         input, select, textarea { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; font-size: 14px; }
         .btn-acao { width: 100%; background: #0d47a1; color: white; border: none; padding: 14px; border-radius: 8px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
         
-        /* Requisitos Dinâmicos */
+        .card-balao { background: white; color: #0d47a1; padding: 40px 50px; border-radius: 60px; box-shadow: 0 8px 15px rgba(0,0,0,0.1); border: 2px solid transparent; cursor: pointer; font-weight: bold; margin: 10px; text-transform: uppercase; }
+
         .req-input-group { display: flex; gap: 10px; margin-bottom: 10px; }
         .btn-add { background: #0d47a1; color: white; border: none; border-radius: 8px; padding: 0 20px; cursor: pointer; font-size: 20px; }
         .req-item { display: flex; justify-content: space-between; align-items: center; background: #f0f7ff; padding: 8px 12px; border-radius: 5px; margin-bottom: 5px; border: 1px solid #d1e9ff; font-size: 14px; }
 
-        .profile-pic { width: 120px; height: 120px; border-radius: 50%; border: 3px solid #0d47a1; object-fit: cover; background: #eee; display: block; margin: 0 auto 20px; }
+        .profile-pic { width: 120px; height: 120px; border-radius: 50%; border: 3px solid #0d47a1; object-fit: cover; display: block; margin: 0 auto 20px; }
         .meter { height: 5px; background: #eee; margin-top: -10px; margin-bottom: 15px; border-radius: 3px; overflow: hidden; }
         .meter-bar { height: 100%; width: 0; transition: 0.3s; }
     </style>
@@ -68,34 +66,73 @@
     <div class="main-container">
         <div id="home">
             <h1 style="color: #0d47a1; font-size: 3rem; margin-bottom: 40px;">CONNECTER</h1>
-            <button style="padding:40px; border-radius:60px; cursor:pointer" onclick="mostrarTela('cad-empresa')">Cadastre-se Empresa</button>
+            <button class="card-balao" onclick="mostrarTela('cad-empresa')">Cadastre-se como Empresa</button>
+            <button class="card-balao" onclick="mostrarTela('cad-candidato')">Cadastre-se como Candidato</button>
         </div>
 
-        <div id="dashboard" class="hidden">
-            <div class="box-container"><h2>Bem-vindo!</h2><p>Use o menu lateral (☰) para navegar.</p></div>
+        <div id="login-empresa" class="hidden">
+            <div class="box-container"><h2>Login Empresa</h2><label>CNPJ ou E-mail:</label><input type="text"><label>Senha:</label><input type="password"><button class="btn-acao" onclick="entrarFake('empresa')">ENTRAR</button></div>
+        </div>
+        <div id="login-candidato" class="hidden">
+            <div class="box-container"><h2>Login Candidato</h2><label>CPF ou E-mail:</label><input type="text"><label>Senha:</label><input type="password"><button class="btn-acao" onclick="entrarFake('candidato')">ENTRAR</button></div>
+        </div>
+
+        <div id="cad-empresa" class="hidden">
+            <div class="box-container">
+                <h2>Cadastro Empresa</h2>
+                <label>E-mail Corporativo:</label><input type="email" id="e_email">
+                <label>Senha:</label><input type="password" oninput="medirSenha(this.value, 'm1')">
+                <div class="meter"><div id="m1" class="meter-bar"></div></div>
+                <label>Nome da Empresa:</label><input type="text" id="e_nome">
+                <label>CNPJ:</label><input type="text" maxlength="14" id="e_cnpj">
+                <label>Setor:</label>
+                <select id="e_setor" onchange="document.getElementById('e_outro_div').className = this.value === 'Outros' ? '' : 'hidden'">
+                    <option>Tecnologia</option><option>Saúde</option><option value="Outros">Outros...</option>
+                </select>
+                <div id="e_outro_div" class="hidden"><label>Especifique:</label><input type="text" id="e_outro_val"></div>
+                <label>Descrição:</label><textarea rows="3" id="e_desc_cad"></textarea>
+                <button class="btn-acao" onclick="salvar('empresa')">CADASTRAR E ENTRAR</button>
+            </div>
+        </div>
+
+        <div id="cad-candidato" class="hidden">
+            <div class="box-container">
+                <h2>Cadastro Candidato</h2>
+                <label>E-mail Pessoal:</label><input type="email">
+                <label>Senha:</label><input type="password" oninput="medirSenha(this.value, 'm2')">
+                <div class="meter"><div id="m2" class="meter-bar"></div></div>
+                <label>Nome Completo:</label><input type="text">
+                <label>CPF:</label><input type="text" maxlength="11">
+                <button class="btn-acao" onclick="salvar('candidato')">CADASTRAR E ENTRAR</button>
+            </div>
+        </div>
+
+        <div id="dashboard" class="hidden"><div class="box-container"><h2>Bem-vindo!</h2><p>Use a Sidebar (☰) para navegar.</p></div></div>
+
+        <div id="perfil-candidato" class="hidden">
+            <div class="box-container">
+                <h2>Meu Perfil (Candidato)</h2>
+                <img src="https://via.placeholder.com/150" class="profile-pic" id="foto-c-prev">
+                <label>Localidade:</label><input type="text" placeholder="Cidade - Estado">
+                <label>Escolaridade:</label>
+                <select><option>Ensino Médio</option><option>Superior</option><option>MBA</option></select>
+                <button class="btn-acao">Salvar</button>
+            </div>
         </div>
 
         <div id="publicar-vagas" class="hidden">
             <div class="box-container">
                 <h2>Publicar Nova Vaga</h2>
-                <label>Título da Vaga:</label><input type="text" id="v_titulo">
-                <label>Tipo de Contrato:</label><select><option>CLT</option><option>PJ</option></select>
+                <label>Título:</label><input type="text" id="v_titulo">
+                <label>Contrato:</label><select><option>CLT</option><option>PJ</option></select>
                 <label>Salário:</label><input type="text" placeholder="R$ 2.300,00">
-                
                 <label>Requisitos (+):</label>
-                <div class="req-input-group">
-                    <input type="text" id="req_input" style="margin-bottom:0">
-                    <button class="btn-add" onclick="addRequisito()">+</button>
-                </div>
-                <div id="lista-requisitos" style="margin-bottom:20px"></div>
-
+                <div class="req-input-group"><input type="text" id="req_input" style="margin:0"><button class="btn-add" onclick="addRequisito()">+</button></div>
+                <div id="lista-requisitos" style="margin-bottom:15px"></div>
                 <label>Descrição Atividades:</label><textarea rows="4"></textarea>
-                <button class="btn-acao">Publicar Agora</button>
+                <button class="btn-acao" onclick="alert('Publicado!')">Publicar Agora</button>
             </div>
         </div>
-
-        <div id="perfil-empresa" class="hidden"><div class="box-container"><h2>Meu Perfil</h2><button class="btn-acao" onclick="mostrarTela('dashboard')">Voltar</button></div></div>
-        <div id="cad-empresa" class="hidden"><div class="box-container"><h2>Cadastro Empresa</h2><button class="btn-acao" onclick="entrarFake('empresa')">Entrar</button></div></div>
     </div>
 
     <script>
@@ -117,19 +154,29 @@
             document.querySelectorAll('.main-container > div').forEach(d => d.classList.add('hidden'));
             document.getElementById(id).classList.remove('hidden');
         }
-        function entrarFake(tipo) {
+        function medirSenha(s, id) {
+            const b = document.getElementById(id);
+            b.style.width = s.length > 7 ? "100%" : s.length > 4 ? "50%" : "20%";
+            b.style.background = s.length > 7 ? "green" : s.length > 4 ? "orange" : "red";
+        }
+        function entrarFake(tipo) { entrarDireto(tipo); }
+        function salvar(tipo) { entrarDireto(tipo); }
+        function entrarDireto(tipo) {
             document.getElementById('nav-links').style.display = 'none';
             document.getElementById('btn-hamburguer').style.display = 'block';
             const menu = document.getElementById('menu-contextual');
             if(tipo === 'empresa') {
                 menu.innerHTML = `
-                    <div class="menu-item" onclick="mostrarTela('perfil-empresa');toggleSidebar()"><i class="fas fa-user-circle"></i> Meu Perfil</div>
-                    <div class="menu-item"><i class="fas fa-list-ul"></i> Minhas Vagas Publicadas</div>
+                    <div class="menu-item"><i class="fas fa-user-circle"></i> Meu Perfil</div>
                     <div class="menu-item" onclick="mostrarTela('publicar-vagas');toggleSidebar()"><i class="fas fa-briefcase"></i> Publicar Vagas</div>
+                    <div class="menu-item"><i class="fas fa-list-ul"></i> Minhas Vagas</div>
                     <div class="menu-item"><i class="fas fa-headset"></i> Suporte</div>`;
+            } else {
+                menu.innerHTML = `<div class="menu-item" onclick="mostrarTela('perfil-candidato');toggleSidebar()"><i class="fas fa-user-circle"></i> Meu Perfil</div><div class="menu-item"><i class="fas fa-search"></i> Ver Vagas</div>`;
             }
             mostrarTela('dashboard');
         }
+        function voltarHome() { if(document.getElementById('btn-hamburguer').style.display !== 'block') mostrarTela('home'); }
     </script>
 </body>
 </html>
