@@ -16,7 +16,7 @@
         .card-balao { background-color: #ffffff; color: #0d47a1; padding: 40px 50px; border-radius: 60px; box-shadow: 0 8px 15px rgba(0,0,0,0.1); transition: all 0.2s ease; border: 2px solid transparent; cursor: pointer; text-transform: uppercase; font-weight: bold; font-size: 1.1rem; }
         .card-balao:hover { border-color: #0d47a1; transform: translateY(-5px); }
 
-        /* Estilo dos Formulários (Cadastro e Login) */
+        /* Estilo dos Containers de Formulário */
         .box-container { background-color: #ffffff; padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 450px; text-align: left; }
         .box-container h2 { margin-top: 0; color: #0d47a1; font-size: 1.2rem; text-align: center; margin-bottom: 20px; text-transform: uppercase; }
         .section-title { background: #f0f0f0; padding: 5px 10px; margin: 15px 0 10px; font-size: 11px; color: #0d47a1; font-weight: bold; text-transform: uppercase; border-left: 3px solid #0d47a1; }
@@ -50,8 +50,8 @@
         <div id="login-empresa" class="hidden">
             <div class="box-container">
                 <h2>Login Empresa</h2>
-                <label>CNPJ ou E-mail:</label><input type="text" placeholder="00.000.000/0000-00">
-                <label>Senha:</label><input type="password" placeholder="********">
+                <label>CNPJ ou E-mail:</label><input type="text" id="l_emp_user" placeholder="00.000.000/0000-00">
+                <label>Senha:</label><input type="password" id="l_emp_pass" placeholder="********">
                 <button class="btn-acao">Entrar</button>
             </div>
         </div>
@@ -59,8 +59,8 @@
         <div id="login-candidato" class="hidden">
             <div class="box-container">
                 <h2>Login Candidato</h2>
-                <label>CPF ou E-mail:</label><input type="text" placeholder="000.000.000-00">
-                <label>Senha:</label><input type="password" placeholder="********">
+                <label>CPF ou E-mail:</label><input type="text" id="l_cand_user" placeholder="000.000.000-00">
+                <label>Senha:</label><input type="password" id="l_cand_pass" placeholder="********">
                 <button class="btn-acao">Entrar</button>
             </div>
         </div>
@@ -77,13 +77,13 @@
                 <label>Nome da Empresa:</label><input type="text" id="e_nome">
                 <label>CNPJ (14 nº):</label><input type="text" maxlength="14" id="e_cnpj">
                 <label>Área de Atuação:</label>
-                <select onchange="document.getElementById('e_outro_div').className = this.value === 'Outros' ? '' : 'hidden'">
+                <select id="e_area" onchange="document.getElementById('e_outro_div').className = this.value === 'Outros' ? '' : 'hidden'">
                     <option value="Tecnologia">Tecnologia</option>
                     <option value="Saúde">Saúde</option>
                     <option value="Educação">Educação</option>
                     <option value="Outros">Outros...</option>
                 </select>
-                <div id="e_outro_div" class="hidden"><label>Especifique:</label><input type="text"></div>
+                <div id="e_outro_div" class="hidden"><label>Especifique:</label><input type="text" id="e_area_outro"></div>
                 <label>Descrição:</label><textarea rows="2" id="e_desc"></textarea>
                 <button class="btn-acao" onclick="salvar('empresa')">Cadastrar e Entrar</button>
             </div>
@@ -109,43 +109,4 @@
 
     <script>
         const SB_URL = 'https://somngtdevyazwqonmayo.supabase.co'; 
-        const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNvbW5ndGRldnlhendxb25tYXlvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM1MTk2NTQsImV4cCI6MjA4OTA5NTY1NH0.RGf3ZMVw6n4GyIVroBBUoD7dmKQAOReUuAsew0DVBVw'; 
-        const _supabase = supabase.createClient(SB_URL, SB_KEY);
-
-        function mostrarTela(id) {
-            const telas = ['home', 'login-empresa', 'login-candidato', 'cad-empresa', 'cad-candidato'];
-            telas.forEach(t => document.getElementById(t).classList.add('hidden'));
-            document.getElementById(id).classList.remove('hidden');
-
-            const nav = document.getElementById('nav-content');
-            if(id.includes('login')) {
-                nav.innerHTML = '<span onclick="mostrarTela(\'cad-empresa\')">Cadastre-se como Empresa</span> | <span onclick="mostrarTela(\'cad-candidato\')">Cadastre-se como Usuário</span>';
-            } else {
-                nav.innerHTML = '<span onclick="mostrarTela(\'login-empresa\')">Entre como Empresa</span> | <span onclick="mostrarTela(\'login-candidato\')">Entre como Candidato</span>';
-            }
-        }
-
-        function voltarHome() { mostrarTela('home'); }
-
-        function medirSenha(s, id) {
-            const b = document.getElementById(id);
-            if(s.length > 7) { b.style.width="100%"; b.style.background="green"; }
-            else if(s.length > 4) { b.style.width="50%"; b.style.background="orange"; }
-            else { b.style.width="20%"; b.style.background="red"; }
-        }
-
-        async function salvar(tipo) {
-            const tab = tipo === 'empresa' ? 'empresas' : 'candidatos';
-            const prefixo = tipo === 'empresa' ? 'e_' : 'c_';
-            const dados = {
-                email: document.getElementById(prefixo + 'email').value,
-                [tipo === 'empresa' ? 'nome_empresa' : 'nome_completo']: document.getElementById(prefixo + 'nome').value,
-                [tipo === 'empresa' ? 'cnpj' : 'cpf']: document.getElementById(prefixo + 'doc' || prefixo + (tipo === 'empresa' ? 'cnpj' : 'cpf')).value
-            };
-            const { error } = await _supabase.from(tab).insert([dados]);
-            if(error) alert(error.message);
-            else alert("Cadastro realizado com sucesso!");
-        }
-    </script>
-</body>
-</html>
+        const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNvbW5ndGRldnlhendxb25tYXlvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM1MTk2NTQsImV4
