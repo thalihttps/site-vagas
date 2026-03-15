@@ -6,77 +6,21 @@
     <title>Portal de Vagas - Cadastro</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        body { 
-            margin: 0; padding: 0; font-family: Arial, sans-serif; 
-            background-color: #e3f2fd; min-height: 100vh; 
-            display: flex; flex-direction: column; 
-        }
-
-        /* Menu Superior */
-        .top-menu { 
-            position: absolute; top: 20px; right: 30px; 
-            font-size: 12px; color: #555; letter-spacing: 1px; 
-        }
-
-        .main-container { 
-            flex: 1; display: flex; justify-content: center; 
-            align-items: center; gap: 40px; padding: 20px;
-        }
-
-        /* Botões Iniciais (Balão Arredondado) */
-        .card-balao { 
-            background-color: #ffffff; color: #0d47a1; padding: 40px 60px; 
-            border-radius: 60px; box-shadow: 0 8px 15px rgba(0,0,0,0.1); 
-            transition: all 0.2s ease; border: none; cursor: pointer; 
-            text-transform: uppercase; font-weight: bold; font-size: 1.1rem; 
-        }
-
-        .card-balao:active { 
-            transform: translateY(6px); 
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2); 
-        }
-
-        /* Formulário Estilo Corporativo */
-        .form-cadastro {
-            background: #f8f9fa; border-radius: 8px;
-            width: 100%; max-width: 650px; text-align: left;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15); border: 1px solid #ccc;
-        }
-
-        .form-header {
-            background: #cedce7; padding: 12px 20px;
-            border-radius: 8px 8px 0 0; color: #333;
-            font-weight: bold; border-bottom: 1px solid #abbbc8;
-        }
-
+        body { margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #e3f2fd; min-height: 100vh; display: flex; flex-direction: column; }
+        .top-menu { position: absolute; top: 20px; right: 30px; font-size: 12px; color: #555; letter-spacing: 1px; }
+        .main-container { flex: 1; display: flex; justify-content: center; align-items: center; gap: 40px; padding: 20px; }
+        .card-balao { background-color: #ffffff; color: #0d47a1; padding: 40px 60px; border-radius: 60px; box-shadow: 0 8px 15px rgba(0,0,0,0.1); transition: all 0.2s ease; border: none; cursor: pointer; text-transform: uppercase; font-weight: bold; font-size: 1.1rem; }
+        .card-balao:active { transform: translateY(6px); box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .form-cadastro { background: #f8f9fa; border-radius: 8px; width: 100%; max-width: 650px; text-align: left; box-shadow: 0 10px 25px rgba(0,0,0,0.15); border: 1px solid #ccc; }
+        .form-header { background: #cedce7; padding: 12px 20px; border-radius: 8px 8px 0 0; color: #333; font-weight: bold; border-bottom: 1px solid #abbbc8; }
         .form-body { padding: 25px; }
-
-        .section-title {
-            background: #dee2e6; padding: 6px 12px;
-            margin: 20px 0 10px 0; font-size: 13px;
-            color: #0d47a1; font-weight: bold; text-transform: uppercase;
-        }
-        .section-title:first-child { margin-top: 0; }
-
+        .section-title { background: #dee2e6; padding: 6px 12px; margin: 20px 0 10px 0; font-size: 13px; color: #0d47a1; font-weight: bold; text-transform: uppercase; }
         label { display: block; font-size: 12px; margin-bottom: 4px; color: #444; font-weight: bold; }
-        
-        input, select, textarea {
-            width: 100%; padding: 8px; margin-bottom: 12px;
-            border: 1px solid #bbb; border-radius: 3px; box-sizing: border-box;
-        }
-
+        input, select, textarea { width: 100%; padding: 8px; margin-bottom: 12px; border: 1px solid #bbb; border-radius: 3px; box-sizing: border-box; }
         .row { display: flex; gap: 20px; }
         .col { flex: 1; }
-
-        .btn-cadastrar-final {
-            background-color: #1a73e8; color: white; border: none;
-            padding: 12px 25px; border-radius: 4px; cursor: pointer;
-            font-weight: bold; margin-top: 15px; width: 150px;
-        }
-
-        .btn-cadastrar-final:hover { background-color: #1557b0; }
+        .btn-cadastrar-final { background-color: #1a73e8; color: white; border: none; padding: 12px 25px; border-radius: 4px; cursor: pointer; font-weight: bold; margin-top: 15px; }
         .btn-cadastrar-final:active { transform: translateY(2px); }
-
         .link-voltar { color: #1976d2; text-decoration: none; font-size: 13px; margin-left: 15px; }
         .hidden { display: none !important; }
     </style>
@@ -95,7 +39,7 @@
     </div>
 
     <script>
-        // CONFIGURAÇÃO SUPABASE INSERIDA
+        // CONFIGURAÇÃO SUPABASE
         const SB_URL = 'https://somngtdevyazwqonmayo.supabase.co'; 
         const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNvbW5ndGRldnlhendxb25tYXlvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM1MTk2NTQsImV4cCI6MjA4OTA5NTY1NH0.RGf3ZMVw6n4GyIVroBBUoD7dmKQAOReUuAsew0DVBVw'; 
         
@@ -116,7 +60,6 @@
                         <div class="section-title">Dados da Organização</div>
                         <label>Nome da Empresa:</label>
                         <input type="text" id="emp_nome">
-
                         <div class="row">
                             <div class="col">
                                 <label>Setor/Área de atuação:</label>
@@ -133,19 +76,16 @@
                                 </select>
                             </div>
                             <div class="col">
-                                <label>CNPJ:</label>
-                                <input type="text" id="emp_cnpj" placeholder="Apenas os 14 números" maxlength="14">
+                                <label>CNPJ (apenas 14 números):</label>
+                                <input type="text" id="emp_cnpj" maxlength="14">
                             </div>
                         </div>
-
                         <div id="div_outros" class="hidden">
                             <label>Especifique o Ramo:</label>
                             <input type="text" id="emp_setor_outro">
                         </div>
-
                         <label>Descrição da Empresa:</label>
                         <textarea id="emp_desc" rows="3"></textarea>
-
                         <div class="section-title">Dados do Recrutador</div>
                         <div class="row">
                             <div class="col"><label>Nome:</label><input type="text" id="rec_nome"></div>
@@ -155,7 +95,6 @@
                             <div class="col"><label>Telefone:</label><input type="text" id="rec_tel"></div>
                             <div class="col"><label>Cargo:</label><input type="text" id="rec_cargo"></div>
                         </div>
-
                         <button class="btn-cadastrar-final" onclick="salvarNoBanco()">CADASTRAR</button>
                         <a href="#" class="link-voltar" onclick="voltar()">Cancelar</a>
                     </div>
@@ -166,7 +105,7 @@
                     <div class="form-header">Novo Cadastro de Candidato</div>
                     <div class="form-body">
                         <label>Nome Completo:</label><input type="text" id="c_nome">
-                        <label>CPF:</label><input type="text" id="c_cpf">
+                        <label>CPF (apenas 11 números):</label><input type="text" id="c_cpf" maxlength="11">
                         <label>Cargo Pretendido:</label><input type="text" id="c_cargo">
                         <button class="btn-cadastrar-final" onclick="salvarNoBanco()">CADASTRAR</button>
                         <a href="#" class="link-voltar" onclick="voltar()">Cancelar</a>
@@ -192,11 +131,19 @@
 
             if (tipoAtual === 'empresa') {
                 tabela = 'empresas';
+                const cnpj = document.getElementById('emp_cnpj').value;
+                const nome = document.getElementById('emp_nome').value;
                 const setorSel = document.getElementById('emp_setor').value;
+
+                if (!nome || !setorSel || cnpj.length !== 14 || isNaN(cnpj)) {
+                    alert("Por favor, preencha o Nome, Setor e o CNPJ com exatamente 14 números.");
+                    return;
+                }
+
                 dados = {
-                    nome_empresa: document.getElementById('emp_nome').value,
+                    nome_empresa: nome,
                     setor: setorSel === 'Outros' ? document.getElementById('emp_setor_outro').value : setorSel,
-                    cnpj: document.getElementById('emp_cnpj').value,
+                    cnpj: cnpj,
                     descricao: document.getElementById('emp_desc').value,
                     recrutador_nome: document.getElementById('rec_nome').value,
                     recrutador_email: document.getElementById('rec_email').value,
@@ -205,20 +152,21 @@
                 };
             } else {
                 tabela = 'candidatos';
+                const cpf = document.getElementById('c_cpf').value;
+                if (cpf.length !== 11 || isNaN(cpf)) {
+                    alert("O CPF deve conter exatamente 11 números.");
+                    return;
+                }
                 dados = {
                     nome_completo: document.getElementById('c_nome').value,
-                    cpf: document.getElementById('c_cpf').value,
+                    cpf: cpf,
                     cargo: document.getElementById('c_cargo').value
                 };
             }
 
             const { error } = await _supabase.from(tabela).insert([dados]);
-
             if (error) alert("Erro: " + error.message);
-            else {
-                alert("Cadastro realizado com sucesso!");
-                voltar();
-            }
+            else { alert("Cadastro realizado com sucesso!"); voltar(); }
         }
     </script>
 </body>
