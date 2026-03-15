@@ -21,7 +21,7 @@
         .card-balao { background-color: #ffffff; color: #0d47a1; padding: 35px 50px; border-radius: 60px; box-shadow: 0 8px 15px rgba(0,0,0,0.1); transition: all 0.2s ease; border: none; cursor: pointer; text-transform: uppercase; font-weight: bold; font-size: 1rem; margin: 0 15px; }
         .card-balao:active { transform: translateY(5px); box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
 
-        /* Formulários e Modais de Login */
+        /* Formulários */
         .form-cadastro { background: #f8f9fa; border-radius: 8px; width: 100%; max-width: 600px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); border: 1px solid #ccc; overflow: hidden; }
         .form-header { background: #cedce7; padding: 15px 20px; color: #333; font-weight: bold; border-bottom: 1px solid #abbbc8; }
         .form-body { padding: 25px; }
@@ -86,7 +86,9 @@
             document.getElementById('tela-inicial').classList.add('hidden');
             document.getElementById('tela-entrar').classList.add('hidden');
             document.getElementById('tela-form').classList.add('hidden');
-            document.getElementById(id === 'inicial' ? 'tela-inicial' : (id === 'entrar' ? 'tela-entrar' : 'tela-form')).classList.remove('hidden');
+            if(id === 'inicial') document.getElementById('tela-inicial').classList.remove('hidden');
+            else if(id === 'entrar') document.getElementById('tela-entrar').classList.remove('hidden');
+            else document.getElementById('tela-form').classList.remove('hidden');
         }
 
         function abrirForm(tipo) {
@@ -100,7 +102,7 @@
                     <div class="form-header">Cadastro de Empresa</div>
                     <div class="form-body">
                         <div class="section-title">Dados de Login</div>
-                        <label>E-mail Corporativo (Login):</label><input type="email" id="e_email">
+                        <label>E-mail Corporativo:</label><input type="email" id="e_email">
                         <label>Crie uma Senha:</label>
                         <input type="password" id="e_senha" oninput="testarSenha(this.value)">
                         <div class="password-meter"><div id="m-bar" class="meter-bar"></div></div>
@@ -130,22 +132,12 @@
                             <div class="col"><label>CPF (11 dígitos):</label><input type="text" id="c_cpf" maxlength="11"></div>
                             <div class="col"><label>Telefone:</label><input type="text" id="c_tel"></div>
                         </div>
-                        <label>LinkedIn (Opcional):</label><input type="url" id="c_link">
+                        <label>LinkedIn (Opcional):</label><input type="url" id="c_link" placeholder="https://linkedin.com/in/seu-perfil">
                         
-                        <div class="section-title">Perfil Profissional</div>
-                        <label>Situação/Área:</label>
-                        <select id="c_area">
-                            <option value="Desempregado">Desempregado</option>
-                            <option value="Estudante">Estudante</option>
-                            <option value="Tecnologia">Tecnologia</option>
-                            <option value="Administração">Administração</option>
-                            <option value="Marketing">Marketing</option>
-                            <option value="Saúde">Saúde</option>
-                        </select>
-
                         <div class="section-title">Dados de Login</div>
-                        <label>E-mail:</label><input type="email" id="c_email">
-                        <label>Senha:</label><input type="password" id="c_senha" oninput="testarSenha(this.value)">
+                        <label>E-mail (Login):</label><input type="email" id="c_email">
+                        <label>Crie uma Senha:</label>
+                        <input type="password" id="c_senha" oninput="testarSenha(this.value)">
                         <div class="password-meter"><div id="m-bar" class="meter-bar"></div></div>
                         <span id="m-text" class="meter-text"></span>
 
@@ -175,12 +167,14 @@
         function testarSenha(s) {
             const b = document.getElementById('m-bar');
             const t = document.getElementById('m-text');
+            if (!s) { b.style.width="0%"; t.innerText=""; return; }
+            
             const forte = s.length > 6 && /[A-Z]/.test(s) && /[0-9]/.test(s) && /[^A-Za-z0-9]/.test(s);
             const media = s.length >= 4 && /[0-9]/.test(s) && /[a-z]/.test(s);
 
-            if (forte) { b.style.width="100%"; b.style.backgroundColor="#2ecc71"; t.innerText="Senha Forte"; }
-            else if (media) { b.style.width="60%"; b.style.backgroundColor="#f1c40f"; t.innerText="Senha Moderada"; }
-            else { b.style.width="30%"; b.style.backgroundColor="#ff4d4d"; t.innerText="Senha Fraca"; }
+            if (forte) { b.style.width="100%"; b.style.backgroundColor="#2ecc71"; t.innerText="Senha Forte"; t.style.color="#2ecc71"; }
+            else if (media) { b.style.width="60%"; b.style.backgroundColor="#f1c40f"; t.innerText="Senha Moderada"; t.style.color="#f1c40f"; }
+            else { b.style.width="30%"; b.style.backgroundColor="#ff4d4d"; t.innerText="Senha Fraca"; t.style.color="#ff4d4d"; }
         }
 
         async function cadastrar() {
@@ -190,16 +184,24 @@
             if(tipoAtual === 'empresa') {
                 const cnpj = document.getElementById('e_cnpj').value;
                 if(cnpj.length < 14) { alert("CNPJ incompleto"); return; }
-                dados = { nome_empresa: document.getElementById('e_nome').value, cnpj: cnpj, setor: document.getElementById('e_setor').value };
+                dados = { 
+                    nome_empresa: document.getElementById('e_nome').value, 
+                    cnpj: cnpj, 
+                    setor: document.getElementById('e_setor').value 
+                };
             } else {
                 const cpf = document.getElementById('c_cpf').value;
                 if(cpf.length < 11) { alert("CPF incompleto"); return; }
-                dados = { nome_completo: document.getElementById('c_nome').value, cpf: cpf, cargo: document.getElementById('c_area').value };
+                dados = { 
+                    nome_completo: document.getElementById('c_nome').value, 
+                    cpf: cpf,
+                    email: document.getElementById('c_email').value
+                };
             }
 
             const { error } = await _supabase.from(tabela).insert([dados]);
             if (error) alert(error.message);
-            else { alert("Sucesso! Redirecionando..."); mostrarTela('entrar'); }
+            else { alert("Cadastro realizado com sucesso! Senha validada."); mostrarTela('entrar'); }
         }
     </script>
 </body>
