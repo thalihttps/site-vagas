@@ -28,15 +28,18 @@
         .hidden { display: none !important; }
 
         /* Boxes e Form */
-        .box-container { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 450px; text-align: left; }
-        .box-container h2 { margin: 0 0 20px; color: #000; font-size: 1.5rem; text-align: center; }
-        label { display: block; font-size: 14px; margin-bottom: 5px; color: #333; font-weight: bold; }
+        .box-container { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 500px; text-align: left; margin-bottom: 20px; }
+        .box-container h2 { margin: 0 0 20px; color: #0d47a1; font-size: 1.5rem; text-align: center; border-bottom: 2px solid #e3f2fd; padding-bottom: 10px; }
+        label { display: block; font-size: 13px; margin-bottom: 5px; color: #555; font-weight: bold; }
         input, select, textarea { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; font-size: 14px; }
         .btn-acao { width: 100%; background: #0d47a1; color: white; border: none; padding: 14px; border-radius: 8px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
         
-        /* Botões Iniciais */
-        .card-balao { background: white; color: #0d47a1; padding: 40px 50px; border-radius: 60px; box-shadow: 0 8px 15px rgba(0,0,0,0.1); border: 2px solid transparent; cursor: pointer; font-weight: bold; margin: 10px; text-transform: uppercase; }
+        /* Foto de Perfil */
+        .profile-pic-container { text-align: center; margin-bottom: 25px; }
+        .profile-pic { width: 120px; height: 120px; border-radius: 50%; border: 3px solid #0d47a1; object-fit: cover; background: #eee; display: block; margin: 0 auto; }
+        .upload-btn { display: inline-block; margin-top: 10px; font-size: 12px; color: #0d47a1; cursor: pointer; font-weight: bold; }
 
+        /* Medidor de Senha */
         .meter { height: 5px; background: #eee; margin-top: -10px; margin-bottom: 15px; border-radius: 3px; overflow: hidden; }
         .meter-bar { height: 100%; width: 0; transition: 0.3s; }
     </style>
@@ -64,15 +67,15 @@
     <div class="main-container">
         <div id="home">
             <h1 style="color: #0d47a1; font-size: 3rem; margin-bottom: 40px;">CONNECTER</h1>
-            <button class="card-balao" onclick="mostrarTela('cad-empresa')">Cadastre-se como Empresa</button>
-            <button class="card-balao" onclick="mostrarTela('cad-candidato')">Cadastre-se como Candidato</button>
+            <button style="background:white; color:#0d47a1; padding:40px 50px; border-radius:60px; box-shadow: 0 8px 15px rgba(0,0,0,0.1); border:2px solid transparent; cursor:pointer; font-weight:bold; margin:10px; text-transform:uppercase;" onclick="mostrarTela('cad-empresa')">Cadastre-se como Empresa</button>
+            <button style="background:white; color:#0d47a1; padding:40px 50px; border-radius:60px; box-shadow: 0 8px 15px rgba(0,0,0,0.1); border:2px solid transparent; cursor:pointer; font-weight:bold; margin:10px; text-transform:uppercase;" onclick="mostrarTela('cad-candidato')">Cadastre-se como Candidato</button>
         </div>
 
         <div id="login-empresa" class="hidden">
             <div class="box-container">
                 <h2>Login Empresa</h2>
-                <label>CNPJ ou E-mail:</label><input type="text" id="l_e_user" placeholder="00.000.000/0000-00">
-                <label>Senha:</label><input type="password" id="l_e_pass" placeholder="********">
+                <label>CNPJ ou E-mail:</label><input type="text" placeholder="00.000.000/0000-00">
+                <label>Senha:</label><input type="password" placeholder="********">
                 <button class="btn-acao" onclick="entrarFake('empresa')">ENTRAR</button>
             </div>
         </div>
@@ -80,8 +83,8 @@
         <div id="login-candidato" class="hidden">
             <div class="box-container">
                 <h2>Login Candidato</h2>
-                <label>CPF ou E-mail:</label><input type="text" id="l_c_user" placeholder="000.000.000-00">
-                <label>Senha:</label><input type="password" id="l_c_pass" placeholder="********">
+                <label>CPF ou E-mail:</label><input type="text" placeholder="000.000.000-00">
+                <label>Senha:</label><input type="password" placeholder="********">
                 <button class="btn-acao" onclick="entrarFake('candidato')">ENTRAR</button>
             </div>
         </div>
@@ -98,10 +101,9 @@
                 <select id="e_setor" onchange="document.getElementById('e_outro_div').className = this.value === 'Outros' ? '' : 'hidden'">
                     <option value="Tecnologia">Tecnologia</option>
                     <option value="Saúde">Saúde</option>
-                    <option value="Educação">Educação</option>
                     <option value="Outros">Outros...</option>
                 </select>
-                <div id="e_outro_div" class="hidden"><label>Especifique:</label><input type="text" id="e_setor_outro"></div>
+                <div id="e_outro_div" class="hidden"><label>Especifique:</label><input type="text"></div>
                 <label>Descrição:</label><textarea id="e_desc" rows="3"></textarea>
                 <button class="btn-acao" onclick="salvar('empresa')">CADASTRAR E ENTRAR</button>
             </div>
@@ -110,7 +112,7 @@
         <div id="cad-candidato" class="hidden">
             <div class="box-container">
                 <h2>Cadastro Candidato</h2>
-                <label>E-mail:</label><input type="email" id="c_email">
+                <label>E-mail Pessoal:</label><input type="email" id="c_email">
                 <label>Senha:</label><input type="password" id="c_pass" oninput="medirSenha(this.value, 'm2')">
                 <div class="meter"><div id="m2" class="meter-bar"></div></div>
                 <label>Nome Completo:</label><input type="text" id="c_nome">
@@ -119,9 +121,32 @@
             </div>
         </div>
 
-        <div id="dashboard" class="hidden">
-            <h1 style="color: #0d47a1;">Painel de Controle</h1>
-            <p>Seja bem-vindo. Use o menu lateral para navegar.</p>
+        <div id="perfil-candidato" class="hidden">
+            <div class="box-container">
+                <h2>Meu Perfil</h2>
+                <div class="profile-pic-container">
+                    <img src="https://via.placeholder.com/150" class="profile-pic" id="foto-preview">
+                    <label class="upload-btn">
+                        <i class="fas fa-camera"></i> Alterar Foto
+                        <input type="file" style="display:none" onchange="previewImage(this)">
+                    </label>
+                </div>
+                <label>País:</label><input type="text" placeholder="Brasil">
+                <label>Estado:</label><input type="text" placeholder="Ex: Rio de Janeiro">
+                <label>Cidade:</label><input type="text" placeholder="Ex: Capital">
+                <label>Escolaridade:</label>
+                <select>
+                    <option>Ensino Fundamental Cursando</option>
+                    <option>Ensino Fundamental Completo</option>
+                    <option>Ensino Médio Cursando</option>
+                    <option>Ensino Médio Completo</option>
+                    <option>Ensino Superior Cursando</option>
+                    <option>Ensino Superior Completo</option>
+                    <option>MBA Cursando</option>
+                    <option>MBA Completo</option>
+                </select>
+                <button class="btn-acao">Salvar Perfil</button>
+            </div>
         </div>
     </div>
 
@@ -136,11 +161,11 @@
         }
 
         function mostrarTela(id) {
-            ['home', 'login-empresa', 'login-candidato', 'cad-empresa', 'cad-candidato', 'dashboard'].forEach(t => {
+            ['home', 'login-empresa', 'login-candidato', 'cad-empresa', 'cad-candidato', 'perfil-candidato'].forEach(t => {
                 if(document.getElementById(t)) document.getElementById(t).classList.add('hidden');
             });
             document.getElementById(id).classList.remove('hidden');
-
+            
             const nav = document.getElementById('nav-links');
             if(id.includes('login')) {
                 nav.innerHTML = '<span onclick="mostrarTela(\'cad-empresa\')">Cadastre-se como Empresa</span> | <span onclick="mostrarTela(\'cad-candidato\')">Cadastre-se como Usuário</span>';
@@ -149,7 +174,19 @@
             }
         }
 
-        function voltarHome() { if(document.getElementById('btn-hamburguer').style.display !== 'block') mostrarTela('home'); }
+        function entrarFake(tipo) { entrarDireto(tipo); }
+
+        function entrarDireto(tipo) {
+            document.getElementById('nav-links').classList.add('hidden');
+            document.getElementById('btn-hamburguer').style.display = 'block';
+            const menu = document.getElementById('menu-contextual');
+            if(tipo === 'empresa') {
+                menu.innerHTML = `<div class="menu-item"><i class="fas fa-user-circle"></i> Meu Perfil</div><div class="menu-item"><i class="fas fa-briefcase"></i> Publicar Vagas</div>`;
+            } else {
+                menu.innerHTML = `<div class="menu-item" onclick="mostrarTela('perfil-candidato')"><i class="fas fa-user-circle"></i> Meu Perfil</div><div class="menu-item"><i class="fas fa-search"></i> Ver Vagas</div>`;
+            }
+            mostrarTela(tipo === 'empresa' ? 'home' : 'perfil-candidato');
+        }
 
         function medirSenha(s, id) {
             const b = document.getElementById(id);
@@ -158,24 +195,15 @@
             else { b.style.width="20%"; b.style.background="red"; }
         }
 
-        function entrarFake(tipo) { entrarDireto(tipo, 'Usuário'); }
-
-        function entrarDireto(tipo, nome) {
-            document.getElementById('nav-links').classList.add('hidden');
-            document.getElementById('btn-hamburguer').style.display = 'block';
-            const menu = document.getElementById('menu-contextual');
-            if(tipo === 'empresa') {
-                menu.innerHTML = `<div class="menu-item"><i class="fas fa-user-circle"></i> Meu Perfil</div><div class="menu-item"><i class="fas fa-briefcase"></i> Publicar Vagas</div><div class="menu-item"><i class="fas fa-headset"></i> Suporte</div>`;
-            } else {
-                menu.innerHTML = `<div class="menu-item"><i class="fas fa-user-circle"></i> Meu Perfil</div><div class="menu-item"><i class="fas fa-search"></i> Ver Vagas</div><div class="menu-item"><i class="fas fa-headset"></i> Suporte</div>`;
+        function previewImage(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(e) { document.getElementById('foto-preview').src = e.target.result; }
+                reader.readAsDataURL(input.files[0]);
             }
-            mostrarTela('dashboard');
         }
 
-        async function salvar(tipo) {
-            // No futuro, aqui entra a integração real com Supabase
-            entrarDireto(tipo, 'Novo Cadastro');
-        }
+        function voltarHome() { if(document.getElementById('btn-hamburguer').style.display !== 'block') mostrarTela('home'); }
     </script>
 </body>
 </html>
