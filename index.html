@@ -9,12 +9,10 @@
     <style>
         body { margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; background-color: #e3f2fd; min-height: 100vh; overflow-x: hidden; }
         
-        /* Navbar Superior */
         .navbar { background: #0d47a1; color: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; position: fixed; width: 100%; top: 0; z-index: 1000; box-sizing: border-box; }
         .nav-links { font-size: 13px; font-weight: bold; letter-spacing: 1px; color: white; }
         .nav-links span { cursor: pointer; text-transform: uppercase; margin-left: 15px; }
 
-        /* Sidebar */
         .sidebar { position: fixed; left: -280px; top: 0; width: 280px; height: 100%; background: white; box-shadow: 2px 0 10px rgba(0,0,0,0.1); transition: 0.3s; z-index: 1001; padding-top: 60px; }
         .sidebar.active { left: 0; }
         .menu-item { display: flex; align-items: center; padding: 15px 25px; color: #333; cursor: pointer; font-size: 14px; border-bottom: 1px solid #f0f0f0; }
@@ -28,14 +26,12 @@
         .main-container { padding: 120px 20px; display: flex; flex-direction: column; align-items: center; text-align: center; }
         .hidden { display: none !important; }
 
-        /* Estilo dos Containers */
         .box-container { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 500px; text-align: left; margin-bottom: 20px; }
         .box-container h2 { margin: 0 0 20px; color: #0d47a1; font-size: 1.5rem; text-align: center; border-bottom: 2px solid #e3f2fd; padding-bottom: 10px; }
         label { display: block; font-size: 13px; margin-bottom: 5px; color: #555; font-weight: bold; }
         input, select, textarea { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; font-size: 14px; }
         .btn-acao { width: 100%; background: #0d47a1; color: white; border: none; padding: 14px; border-radius: 8px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
         
-        /* Foto de Perfil */
         .profile-pic-container { text-align: center; margin-bottom: 25px; }
         .profile-pic { width: 120px; height: 120px; border-radius: 50%; border: 3px solid #0d47a1; object-fit: cover; background: #eee; display: block; margin: 0 auto; }
         .upload-btn { display: inline-block; margin-top: 10px; font-size: 12px; color: #0d47a1; cursor: pointer; font-weight: bold; }
@@ -73,21 +69,10 @@
         </div>
 
         <div id="login-empresa" class="hidden">
-            <div class="box-container">
-                <h2>Login Empresa</h2>
-                <label>CNPJ ou E-mail:</label><input type="text" placeholder="00.000.000/0000-00">
-                <label>Senha:</label><input type="password" placeholder="********">
-                <button class="btn-acao" onclick="entrarFake('empresa')">ENTRAR</button>
-            </div>
+            <div class="box-container"><h2>Login Empresa</h2><label>CNPJ ou E-mail:</label><input type="text" id="l_e_user"><label>Senha:</label><input type="password" id="l_e_pass"><button class="btn-acao" onclick="entrarFake('empresa')">ENTRAR</button></div>
         </div>
-
         <div id="login-candidato" class="hidden">
-            <div class="box-container">
-                <h2>Login Candidato</h2>
-                <label>CPF ou E-mail:</label><input type="text" placeholder="000.000.000-00">
-                <label>Senha:</label><input type="password" placeholder="********">
-                <button class="btn-acao" onclick="entrarFake('candidato')">ENTRAR</button>
-            </div>
+            <div class="box-container"><h2>Login Candidato</h2><label>CPF ou E-mail:</label><input type="text" id="l_c_user"><label>Senha:</label><input type="password" id="l_c_pass"><button class="btn-acao" onclick="entrarFake('candidato')">ENTRAR</button></div>
         </div>
 
         <div id="cad-empresa" class="hidden">
@@ -100,10 +85,10 @@
                 <label>CNPJ (14 nº):</label><input type="text" maxlength="14" id="e_cnpj">
                 <label>Setor de Atuação:</label>
                 <select id="e_setor" onchange="document.getElementById('e_outro_div').className = this.value === 'Outros' ? '' : 'hidden'">
-                    <option>Tecnologia</option><option>Saúde</option><option value="Outros">Outros...</option>
+                    <option>Tecnologia</option><option>Saúde</option><option>Educação</option><option value="Outros">Outros...</option>
                 </select>
-                <div id="e_outro_div" class="hidden"><label>Especifique:</label><input type="text"></div>
-                <label>Descrição:</label><textarea id="e_desc" rows="3"></textarea>
+                <div id="e_outro_div" class="hidden"><label>Especifique:</label><input type="text" id="e_outro_val"></div>
+                <label>Descrição:</label><textarea id="e_desc_cad" rows="3"></textarea>
                 <button class="btn-acao" onclick="salvar('empresa')">CADASTRAR E ENTRAR</button>
             </div>
         </div>
@@ -111,40 +96,33 @@
         <div id="cad-candidato" class="hidden">
             <div class="box-container">
                 <h2>Cadastro Candidato</h2>
-                <label>E-mail Pessoal:</label><input type="email" id="c_email">
-                <label>Senha:</label><input type="password" id="c_pass" oninput="medirSenha(this.value, 'm2')">
-                <div class="meter"><div id="m2" class="meter-bar"></div></div>
-                <label>Nome Completo:</label><input type="text" id="c_nome">
-                <label>CPF (11 nº):</label><input type="text" maxlength="11" id="c_cpf">
-                <button class="btn-acao" onclick="salvar('candidato')">CADASTRAR E ENTRAR</button>
+                <label>E-mail Pessoal:</label><input type="email" id="c_email"><label>Senha:</label><input type="password" id="c_pass" oninput="medirSenha(this.value, 'm2')"><div class="meter"><div id="m2" class="meter-bar"></div></div><label>Nome Completo:</label><input type="text" id="c_nome"><label>CPF (11 nº):</label><input type="text" maxlength="11" id="c_cpf"><button class="btn-acao" onclick="salvar('candidato')">CADASTRAR E ENTRAR</button>
             </div>
         </div>
 
         <div id="dashboard" class="hidden">
-            <div class="box-container">
-                <h2>Bem-vindo ao Connecter</h2>
-                <p style="text-align: center; color: #666;">Seu login foi realizado com sucesso. <br><br> Use o menu lateral (☰) no canto superior esquerdo para acessar suas ferramentas.</p>
-            </div>
+            <div class="box-container"><h2>Bem-vindo ao Connecter</h2><p style="text-align: center; color: #666;">Use o menu lateral (☰) para acessar suas ferramentas.</p></div>
         </div>
 
         <div id="perfil-candidato" class="hidden">
             <div class="box-container">
-                <h2>Meu Perfil</h2>
-                <div class="profile-pic-container">
-                    <img src="https://via.placeholder.com/150" class="profile-pic" id="foto-preview">
-                    <label class="upload-btn"><i class="fas fa-camera"></i> Alterar Foto<input type="file" style="display:none" onchange="previewImage(this)"></label>
-                </div>
-                <label>País:</label><input type="text" placeholder="Brasil">
-                <label>Estado:</label><input type="text" placeholder="Ex: Rio de Janeiro">
-                <label>Cidade:</label><input type="text" placeholder="Ex: Capital">
+                <h2>Perfil do Candidato</h2>
+                <div class="profile-pic-container"><img src="https://via.placeholder.com/150" class="profile-pic" id="foto-c-prev"><label class="upload-btn"><i class="fas fa-camera"></i> Alterar Foto<input type="file" style="display:none" onchange="previewImage(this, 'foto-c-prev')"></label></div>
+                <label>País:</label><input type="text" placeholder="Brasil"><label>Estado:</label><input type="text"><label>Cidade:</label><input type="text">
                 <label>Escolaridade:</label>
                 <select>
-                    <option>Ensino Fundamental Cursando</option><option>Ensino Fundamental Completo</option>
-                    <option>Ensino Médio Cursando</option><option>Ensino Médio Completo</option>
-                    <option>Ensino Superior Cursando</option><option>Ensino Superior Completo</option>
-                    <option>MBA Cursando</option><option>MBA Completo</option>
+                    <option>Ensino Fundamental Cursando</option><option>Ensino Fundamental Completo</option><option>Ensino Médio Cursando</option><option>Ensino Médio Completo</option><option>Ensino Superior Cursando</option><option>Ensino Superior Completo</option><option>MBA Cursando</option><option>MBA Completo</option>
                 </select>
                 <button class="btn-acao">Salvar Perfil</button>
+            </div>
+        </div>
+
+        <div id="perfil-empresa" class="hidden">
+            <div class="box-container">
+                <h2>Perfil da Empresa</h2>
+                <div class="profile-pic-container"><img src="https://via.placeholder.com/150" class="profile-pic" id="foto-e-prev"><label class="upload-btn"><i class="fas fa-camera"></i> Alterar Logo<input type="file" style="display:none" onchange="previewImage(this, 'foto-e-prev')"></label></div>
+                <label>Descrição da Empresa:</label><textarea id="e_perf_desc" rows="5"></textarea>
+                <label>País:</label><input type="text" placeholder="Brasil"><label>Estado:</label><input type="text"><label>Cidade:</label><input type="text"><button class="btn-acao">Atualizar Perfil</button>
             </div>
         </div>
     </div>
@@ -160,43 +138,29 @@
         }
 
         function mostrarTela(id) {
-            ['home', 'login-empresa', 'login-candidato', 'cad-empresa', 'cad-candidato', 'perfil-candidato', 'dashboard'].forEach(t => {
+            ['home', 'login-empresa', 'login-candidato', 'cad-empresa', 'cad-candidato', 'perfil-candidato', 'perfil-empresa', 'dashboard'].forEach(t => {
                 if(document.getElementById(t)) document.getElementById(t).classList.add('hidden');
             });
             document.getElementById(id).classList.remove('hidden');
-            
-            // Menu superior dinâmico (só muda se NÃO estiver logado)
             if(document.getElementById('btn-hamburguer').style.display !== 'block') {
                 const nav = document.getElementById('nav-links');
-                if(id.includes('login')) {
-                    nav.innerHTML = '<span onclick="mostrarTela(\'cad-empresa\')">Cadastre-se como Empresa</span> | <span onclick="mostrarTela(\'cad-candidato\')">Cadastre-se como Usuário</span>';
-                } else if(id === 'home') {
-                    nav.innerHTML = '<span onclick="mostrarTela(\'login-empresa\')">Entre como Empresa</span> | <span onclick="mostrarTela(\'login-candidato\')">Entre como Candidato</span>';
-                }
+                if(id.includes('login')) nav.innerHTML = '<span onclick="mostrarTela(\'cad-empresa\')">Cadastre-se como Empresa</span> | <span onclick="mostrarTela(\'cad-candidato\')">Cadastre-se como Usuário</span>';
+                else if(id === 'home') nav.innerHTML = '<span onclick="mostrarTela(\'login-empresa\')">Entre como Empresa</span> | <span onclick="mostrarTela(\'login-candidato\')">Entre como Candidato</span>';
             }
         }
 
         function entrarFake(tipo) { entrarDireto(tipo); }
 
         function entrarDireto(tipo) {
-            // 1. Esconde os links de login/cadastro do topo
             document.getElementById('nav-links').style.display = 'none';
-            // 2. Mostra o botão hambúrguer
             document.getElementById('btn-hamburguer').style.display = 'block';
-            
             const menu = document.getElementById('menu-contextual');
             if(tipo === 'empresa') {
-                menu.innerHTML = `
-                    <div class="menu-item"><i class="fas fa-user-circle"></i> Meu Perfil</div>
-                    <div class="menu-item"><i class="fas fa-briefcase"></i> Publicar Vagas</div>
-                    <div class="menu-item"><i class="fas fa-list-ul"></i> Minhas Vagas</div>`;
-                mostrarTela('dashboard');
+                menu.innerHTML = `<div class="menu-item" onclick="mostrarTela('perfil-empresa'); toggleSidebar();"><i class="fas fa-user-circle"></i> Meu Perfil</div><div class="menu-item"><i class="fas fa-briefcase"></i> Publicar Vagas</div>`;
             } else {
-                menu.innerHTML = `
-                    <div class="menu-item" onclick="mostrarTela('perfil-candidato'); toggleSidebar();"><i class="fas fa-user-circle"></i> Meu Perfil</div>
-                    <div class="menu-item"><i class="fas fa-search"></i> Ver Vagas</div>`;
-                mostrarTela('dashboard');
+                menu.innerHTML = `<div class="menu-item" onclick="mostrarTela('perfil-candidato'); toggleSidebar();"><i class="fas fa-user-circle"></i> Meu Perfil</div><div class="menu-item"><i class="fas fa-search"></i> Ver Vagas</div>`;
             }
+            mostrarTela('dashboard');
         }
 
         function medirSenha(s, id) {
@@ -206,19 +170,20 @@
             else { b.style.width="20%"; b.style.background="red"; }
         }
 
-        function previewImage(input) {
+        function previewImage(input, imgId) {
             if (input.files && input.files[0]) {
                 var reader = new FileReader();
-                reader.onload = function(e) { document.getElementById('foto-preview').src = e.target.result; }
+                reader.onload = function(e) { document.getElementById(imgId).src = e.target.result; }
                 reader.readAsDataURL(input.files[0]);
             }
         }
 
-        function salvar(tipo) { entrarDireto(tipo); }
-
-        function voltarHome() { 
-            if(document.getElementById('btn-hamburguer').style.display !== 'block') mostrarTela('home'); 
+        function salvar(tipo) { 
+            if(tipo === 'empresa') document.getElementById('e_perf_desc').value = document.getElementById('e_desc_cad').value;
+            entrarDireto(tipo); 
         }
+
+        function voltarHome() { if(document.getElementById('btn-hamburguer').style.display !== 'block') mostrarTela('home'); }
     </script>
 </body>
 </html>
