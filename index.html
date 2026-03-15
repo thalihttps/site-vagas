@@ -13,16 +13,22 @@
         .hero-section { text-align: center; }
         .hero-title { color: #0d47a1; margin-bottom: 30px; font-size: 2rem; }
         .card-balao { background-color: #ffffff; color: #0d47a1; padding: 35px 50px; border-radius: 60px; box-shadow: 0 8px 15px rgba(0,0,0,0.1); transition: all 0.2s ease; border: none; cursor: pointer; text-transform: uppercase; font-weight: bold; margin: 0 10px; }
-        .form-cadastro { background: #f8f9fa; border-radius: 8px; width: 100%; max-width: 550px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); border: 1px solid #ccc; overflow: hidden; }
+        
+        .form-cadastro { background: #f8f9fa; border-radius: 8px; width: 100%; max-width: 600px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); border: 1px solid #ccc; overflow: hidden; }
         .form-header { background: #cedce7; padding: 15px 20px; color: #333; font-weight: bold; border-bottom: 1px solid #abbbc8; text-align: left; }
         .form-body { padding: 25px; text-align: left; }
+        
         .section-title { background: #dee2e6; padding: 6px 12px; margin: 15px 0 10px 0; font-size: 11px; color: #0d47a1; font-weight: bold; text-transform: uppercase; }
         label { display: block; font-size: 12px; margin-bottom: 4px; color: #444; font-weight: bold; }
-        input { width: 100%; padding: 10px; margin-bottom: 12px; border: 1px solid #bbb; border-radius: 4px; box-sizing: border-box; }
+        input, select, textarea { width: 100%; padding: 10px; margin-bottom: 12px; border: 1px solid #bbb; border-radius: 4px; box-sizing: border-box; font-family: inherit; }
+        
         .row { display: flex; gap: 15px; }
         .col { flex: 1; }
+        
+        /* Barra de Senha */
         .password-meter { height: 6px; background-color: #ddd; border-radius: 3px; margin-top: -8px; margin-bottom: 5px; overflow: hidden; }
         .meter-bar { height: 100%; width: 0%; transition: width 0.3s; }
+        
         .btn-primary { background-color: #1a73e8; color: white; border: none; padding: 12px 25px; border-radius: 4px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 10px; }
         .hidden { display: none !important; }
     </style>
@@ -86,13 +92,36 @@
                         <div class="password-meter"><div id="bar" class="meter-bar"></div></div>
                         <p id="msg-senha" style="font-size:10px; font-weight:bold; margin:0 0 10px 0;"></p>
 
-                        <div class="section-title">Dados da Empresa</div>
-                        <label>Nome:</label><input type="text" id="i_nome">
+                        <div class="section-title">Dados da Organização</div>
+                        <label>Nome da Empresa:</label><input type="text" id="i_nome">
+                        
                         <div class="row">
+                            <div class="col">
+                                <label>Área de Atuação:</label>
+                                <select id="i_setor" onchange="verificarOutros(this.value)">
+                                    <option value="">Selecione</option>
+                                    <option value="Saúde">Saúde</option>
+                                    <option value="Tecnologia">Tecnologia</option>
+                                    <option value="Administração">Administração</option>
+                                    <option value="Educação">Educação</option>
+                                    <option value="Vendas">Vendas/Comércio</option>
+                                    <option value="Outros">Outros...</option>
+                                </select>
+                            </div>
                             <div class="col"><label>CNPJ (14 nº):</label><input type="text" id="i_doc" maxlength="14"></div>
-                            <div class="col"><label>Telefone (Opcional):</label><input type="text" id="i_tel"></div>
                         </div>
-                        <button class="btn-primary" onclick="salvar()">CADASTRAR</button>
+
+                        <div id="div_outros" class="hidden">
+                            <label>Especifique o Ramo:</label><input type="text" id="i_setor_outro">
+                        </div>
+
+                        <label>Descrição da Empresa:</label>
+                        <textarea id="i_desc" rows="3" placeholder="Conte um pouco sobre a empresa..."></textarea>
+
+                        <div class="section-title">Contato</div>
+                        <label>Telefone (Opcional):</label><input type="text" id="i_tel">
+                        
+                        <button class="btn-primary" onclick="salvar()">CONCLUIR CADASTRO</button>
                     </div>
                 </div>`;
             } else {
@@ -120,6 +149,12 @@
             }
         }
 
+        function verificarOutros(v) {
+            const d = document.getElementById('div_outros');
+            if (v === 'Outros') d.classList.remove('hidden');
+            else d.classList.add('hidden');
+        }
+
         function medirSenha(s) {
             const b = document.getElementById('bar');
             const m = document.getElementById('msg-senha');
@@ -133,15 +168,40 @@
 
         async function salvar() {
             const tabela = tipoGlobal === 'empresa' ? 'empresas' : 'candidatos';
+            
+            // Lógica para pegar o setor correto
+            let setorFinal = "";
+            if(tipoGlobal === 'empresa') {
+                const sel = document.getElementById('i_setor').value;
+                setorFinal = sel === 'Outros' ? document.getElementById('i_setor_outro').value : sel;
+            }
+
             const dados = {
                 email: document.getElementById('i_email').value,
                 [tipoGlobal === 'empresa' ? 'nome_empresa' : 'nome_completo']: document.getElementById('i_nome').value,
-                [tipoGlobal === 'empresa' ? 'cnpj' : 'cpf']: document.getElementById('i_doc').value
+                [tipoGlobal === 'empresa' ? 'cnpj' : 'cpf']: document.getElementById('i_doc').value,
+                ...(tipoGlobal === 'empresa' && { setor: setorFinal, descricao: document.getElementById('i_desc').value })
             };
 
             const { error } = await _supabase.from(tabela).insert([dados]);
             if (error) alert("Erro: " + error.message);
-            else { alert("Salvo com sucesso!"); mudarTela('entrar'); }
+            else { alert("Cadastro realizado com sucesso!"); mudarTela('entrar'); }
+        }
+
+        function exibirLogin(tipo) {
+            mudarTela('form');
+            const box = document.getElementById('conteudo-dinamico');
+            const label = tipo === 'empresa' ? 'E-mail ou CNPJ' : 'E-mail ou CPF';
+            box.innerHTML = `
+                <div class="form-cadastro" style="max-width:350px">
+                    <div class="form-header">Login ${tipo.toUpperCase()}</div>
+                    <div class="form-body">
+                        <label>${label}:</label><input type="text">
+                        <label>Senha:</label><input type="password">
+                        <button class="btn-primary">ENTRAR</button>
+                        <a href="#" style="font-size:12px; display:block; text-align:center; margin-top:10px; color:#1976d2; text-decoration:none;">Esqueceu a senha?</a>
+                    </div>
+                </div>`;
         }
     </script>
 </body>
