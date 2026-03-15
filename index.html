@@ -14,26 +14,30 @@
         .nav-links { font-size: 13px; font-weight: bold; letter-spacing: 1px; }
         .nav-links span { cursor: pointer; text-transform: uppercase; margin-left: 15px; }
 
-        /* Sidebar (Escondida por padrão) */
+        /* Sidebar (Só aparece logado) */
         .sidebar { position: fixed; left: -280px; top: 0; width: 280px; height: 100%; background: white; box-shadow: 2px 0 10px rgba(0,0,0,0.1); transition: 0.3s; z-index: 1001; padding-top: 60px; }
         .sidebar.active { left: 0; }
         .menu-item { display: flex; align-items: center; padding: 15px 25px; color: #333; cursor: pointer; text-decoration: none; font-size: 14px; border-bottom: 1px solid #f0f0f0; }
         .menu-item:hover { background: #f0f7ff; color: #0d47a1; }
         .menu-item i { margin-right: 15px; width: 20px; text-align: center; }
         
-        .btn-menu { background: none; border: none; color: white; font-size: 20px; cursor: pointer; display: none; } /* Só aparece logado */
+        .btn-menu { background: none; border: none; color: white; font-size: 20px; cursor: pointer; display: none; }
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); display: none; z-index: 999; }
         .overlay.active { display: block; }
 
-        /* Conteúdo */
         .main-container { padding: 120px 20px; display: flex; flex-direction: column; align-items: center; text-align: center; }
         .hidden { display: none !important; }
 
-        /* Botões e Boxes */
-        .card-balao { background: white; color: #0d47a1; padding: 40px 50px; border-radius: 60px; box-shadow: 0 8px 15px rgba(0,0,0,0.1); border: 2px solid transparent; cursor: pointer; font-weight: bold; margin: 10px; text-transform: uppercase; }
-        .box-container { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: left; }
-        input, select, textarea { width: 100%; padding: 10px; margin-bottom: 12px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
-        .btn-acao { width: 100%; background: #0d47a1; color: white; border: none; padding: 12px; border-radius: 5px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
+        /* Estilo do Formulário (Exatamente como a imagem) */
+        .box-container { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 450px; text-align: left; }
+        .box-container h2 { margin: 0 0 20px; color: #000; font-size: 1.5rem; }
+        label { display: block; font-size: 14px; margin-bottom: 5px; color: #333; }
+        input, select, textarea { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; font-size: 14px; }
+        .btn-acao { width: 100%; background: #0d47a1; color: white; border: none; padding: 14px; border-radius: 8px; font-weight: bold; cursor: pointer; text-transform: uppercase; font-size: 14px; margin-top: 10px; }
+        
+        /* Medidor de Senha */
+        .meter { height: 5px; background: #eee; margin-top: -10px; margin-bottom: 15px; border-radius: 3px; overflow: hidden; }
+        .meter-bar { height: 100%; width: 0; transition: 0.3s; }
     </style>
 </head>
 <body>
@@ -52,52 +56,45 @@
     <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
 
     <div class="sidebar" id="sidebar">
-        <div class="menu-item"><i class="fas fa-user-circle"></i> Meu Perfil</div>
-        <div class="menu-item"><i class="fas fa-list-ul"></i> Minhas vagas publicadas</div>
-        <div class="menu-item"><i class="fas fa-briefcase"></i> Publicar novas vagas</div>
-        <div class="menu-item"><i class="fas fa-headset"></i> Suporte</div>
+        <div id="menu-contextual"></div>
         <div class="menu-item" onclick="location.reload()" style="color: red; border-top: 2px solid #f0f0f0;"><i class="fas fa-power-off"></i> Sair</div>
     </div>
 
     <div class="main-container">
         <div id="home">
             <h1 style="color: #0d47a1; font-size: 3rem; margin-bottom: 40px;">CONNECTER</h1>
-            <button class="card-balao" onclick="mostrarTela('cad-empresa')">Cadastre-se como Empresa</button>
-            <button class="card-balao" onclick="mostrarTela('cad-candidato')">Cadastre-se como Candidato</button>
-        </div>
-
-        <div id="login-empresa" class="hidden">
-            <div class="box-container">
-                <h2>Login Empresa</h2>
-                <label>CNPJ ou E-mail:</label><input type="text" id="l_emp_user">
-                <label>Senha:</label><input type="password" id="l_emp_pass">
-                <button class="btn-acao" onclick="entrarDireto('empresa')">Entrar</button>
-            </div>
-        </div>
-
-        <div id="login-candidato" class="hidden">
-            <div class="box-container">
-                <h2>Login Candidato</h2>
-                <label>CPF ou E-mail:</label><input type="text" id="l_cand_user">
-                <label>Senha:</label><input type="password" id="l_cand_pass">
-                <button class="btn-acao" onclick="entrarDireto('candidato')">Entrar</button>
-            </div>
+            <button style="background:white; color:#0d47a1; padding:40px 50px; border-radius:60px; box-shadow: 0 8px 15px rgba(0,0,0,0.1); border:2px solid transparent; cursor:pointer; font-weight:bold; margin:10px; text-transform:uppercase;" onclick="mostrarTela('cad-empresa')">Cadastre-se como Empresa</button>
+            <button style="background:white; color:#0d47a1; padding:40px 50px; border-radius:60px; box-shadow: 0 8px 15px rgba(0,0,0,0.1); border:2px solid transparent; cursor:pointer; font-weight:bold; margin:10px; text-transform:uppercase;" onclick="mostrarTela('cad-candidato')">Cadastre-se como Candidato</button>
         </div>
 
         <div id="cad-empresa" class="hidden">
             <div class="box-container">
                 <h2>Cadastro Empresa</h2>
                 <label>E-mail Corporativo:</label><input type="email" id="e_email">
-                <label>Senha:</label><input type="password" id="e_pass">
+                <label>Senha:</label><input type="password" id="e_pass" oninput="medirSenha(this.value, 'm1')">
+                <div class="meter"><div id="m1" class="meter-bar"></div></div>
+                
                 <label>Nome da Empresa:</label><input type="text" id="e_nome">
                 <label>CNPJ (14 nº):</label><input type="text" maxlength="14" id="e_cnpj">
-                <button class="btn-acao" onclick="salvar('empresa')">Cadastrar e Entrar</button>
+                
+                <label>Setor de Atuação:</label>
+                <select id="e_setor" onchange="document.getElementById('e_outro_div').className = this.value === 'Outros' ? '' : 'hidden'">
+                    <option value="Tecnologia">Tecnologia</option>
+                    <option value="Saúde">Saúde</option>
+                    <option value="Educação">Educação</option>
+                    <option value="Outros">Outros...</option>
+                </select>
+                <div id="e_outro_div" class="hidden"><label>Especifique:</label><input type="text" id="e_setor_outro"></div>
+                
+                <label>Descrição da Empresa:</label><textarea id="e_desc" rows="3"></textarea>
+                
+                <button class="btn-acao" onclick="salvar('empresa')">CADASTRAR E ENTRAR</button>
             </div>
         </div>
 
         <div id="dashboard" class="hidden">
             <h1 style="color: #0d47a1;">Painel de Controle</h1>
-            <p>Seja bem-vindo ao Connecter. Use o menu lateral para gerenciar suas vagas.</p>
+            <p>Seja bem-vindo. Use o menu lateral para navegar.</p>
         </div>
     </div>
 
@@ -111,50 +108,49 @@
             document.getElementById('overlay').classList.toggle('active');
         }
 
-        function mostrarTela(id) {
-            ['home', 'login-empresa', 'login-candidato', 'cad-empresa', 'dashboard'].forEach(t => {
-                const el = document.getElementById(t);
-                if(el) el.classList.add('hidden');
-            });
-            document.getElementById(id).classList.remove('hidden');
-
-            // Lógica do menu superior dinâmico (Parte 2)
-            const nav = document.getElementById('nav-links');
-            if(id.includes('login')) {
-                nav.innerHTML = '<span onclick="mostrarTela(\'cad-empresa\')">Cadastre-se como Empresa</span> | <span onclick="mostrarTela(\'cad-candidato\')">Cadastre-se como Usuário</span>';
-            } else if (id === 'home') {
-                nav.innerHTML = '<span onclick="mostrarTela(\'login-empresa\')">Entre como Empresa</span> | <span onclick="mostrarTela(\'login-candidato\')">Entre como Candidato</span>';
-            }
+        function medirSenha(s, id) {
+            const b = document.getElementById(id);
+            if(s.length > 7) { b.style.width="100%"; b.style.background="green"; }
+            else if(s.length > 4) { b.style.width="50%"; b.style.background="orange"; }
+            else { b.style.width="20%"; b.style.background="red"; }
         }
 
-        function entrarDireto(tipo) {
-            // Esconde links de visitante e mostra botão hambúrguer
-            document.getElementById('nav-links').classList.add('hidden');
-            document.getElementById('btn-hamburguer').style.display = 'block';
-            mostrarTela('dashboard');
+        function mostrarTela(id) {
+            ['home', 'cad-empresa', 'dashboard'].forEach(t => {
+                if(document.getElementById(t)) document.getElementById(t).classList.add('hidden');
+            });
+            document.getElementById(id).classList.remove('hidden');
         }
 
         async function salvar(tipo) {
-            const tab = tipo === 'empresa' ? 'empresas' : 'candidatos';
             const email = document.getElementById('e_email').value;
             const nome = document.getElementById('e_nome').value;
             const cnpj = document.getElementById('e_cnpj').value;
+            const setor = document.getElementById('e_setor').value;
+            const desc = document.getElementById('e_desc').value;
 
-            const { error } = await _supabase.from(tab).insert([{ email, nome_empresa: nome, cnpj }]);
+            const { error } = await _supabase.from('empresas').insert([{ 
+                email, 
+                nome_empresa: nome, 
+                cnpj, 
+                area_atuacao: setor === 'Outros' ? document.getElementById('e_setor_outro').value : setor,
+                descricao: desc
+            }]);
 
             if (error) {
-                if (error.code === '23505') alert("E-mail ou Documento já cadastrado!");
+                if (error.code === '23505') alert("E-mail ou CNPJ já cadastrado!");
                 else alert("Erro: " + error.message);
             } else {
-                alert("Cadastro realizado!");
-                entrarDireto(tipo);
+                entrarDireto('empresa', nome);
             }
         }
 
-        function voltarHome() {
-            if(document.getElementById('btn-hamburguer').style.display === 'block') return; // Bloqueia voltar se logado
-            mostrarTela('home');
-        }
-    </script>
-</body>
-</html>
+        function entrarDireto(tipo, nome) {
+            document.getElementById('nav-links').classList.add('hidden');
+            document.getElementById('btn-hamburguer').style.display = 'block';
+            
+            const menu = document.getElementById('menu-contextual');
+            menu.innerHTML = `
+                <div class="menu-item"><i class="fas fa-user-circle"></i> Meu Perfil</div>
+                <div class="menu-item"><i class="fas fa-list-ul"></i> Minhas vagas publicadas</div>
+                <div class="menu-item"><i class="fas fa-briefcase"></i> Publicar novas vagas</div>
