@@ -8,29 +8,127 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body { margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; background-color: #e3f2fd; min-height: 100vh; overflow-x: hidden; }
-        
         .navbar { background: #0d47a1; color: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; position: fixed; width: 100%; top: 0; z-index: 1000; box-sizing: border-box; }
-        .nav-links { font-size: 13px; font-weight: bold; letter-spacing: 1px; color: white; }
+        .nav-links { font-size: 13px; font-weight: bold; color: white; }
         .nav-links span { cursor: pointer; text-transform: uppercase; margin-left: 15px; }
-
         .sidebar { position: fixed; left: -280px; top: 0; width: 280px; height: 100%; background: white; box-shadow: 2px 0 10px rgba(0,0,0,0.1); transition: 0.3s; z-index: 1001; padding-top: 60px; }
         .sidebar.active { left: 0; }
         .menu-item { display: flex; align-items: center; padding: 15px 25px; color: #333; cursor: pointer; font-size: 14px; border-bottom: 1px solid #f0f0f0; }
         .menu-item i { margin-right: 15px; width: 20px; text-align: center; }
         .menu-item:hover { background: #f0f7ff; color: #0d47a1; }
-        
         .btn-menu { background: none; border: none; color: white; font-size: 20px; cursor: pointer; display: none; }
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); display: none; z-index: 999; }
         .overlay.active { display: block; }
-
         .main-container { padding: 120px 20px; display: flex; flex-direction: column; align-items: center; text-align: center; }
         .hidden { display: none !important; }
-
         .box-container { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 500px; text-align: left; margin-bottom: 20px; }
         .box-container h2 { margin: 0 0 20px; color: #0d47a1; font-size: 1.5rem; text-align: center; border-bottom: 2px solid #e3f2fd; padding-bottom: 10px; }
         label { display: block; font-size: 13px; margin-bottom: 5px; color: #555; font-weight: bold; }
         input, select, textarea { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; font-size: 14px; }
         .btn-acao { width: 100%; background: #0d47a1; color: white; border: none; padding: 14px; border-radius: 8px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
-        
-        .profile-pic-container { text-align: center; margin-bottom: 25px; }
-        .profile-pic { width: 120px; height:
+        .req-input-group { display: flex; gap: 10px; margin-bottom: 10px; }
+        .btn-add { background: #0d47a1; color: white; border: none; border-radius: 8px; padding: 0 20px; cursor: pointer; font-size: 20px; }
+        .req-item { display: flex; justify-content: space-between; align-items: center; background: #f0f7ff; padding: 8px 12px; border-radius: 5px; margin-bottom: 5px; border: 1px solid #d1e9ff; font-size: 14px; }
+        .btn-del { color: #ff4d4d; cursor: pointer; border: none; background: none; }
+        .profile-pic { width: 120px; height: 120px; border-radius: 50%; border: 3px solid #0d47a1; object-fit: cover; background: #eee; display: block; margin: 0 auto 25px; }
+        .card-balao { background: white; color: #0d47a1; padding: 40px 50px; border-radius: 60px; box-shadow: 0 8px 15px rgba(0,0,0,0.1); border: 2px solid transparent; cursor: pointer; font-weight: bold; margin: 10px; text-transform: uppercase; }
+        .meter { height: 5px; background: #eee; margin-top: -10px; margin-bottom: 15px; border-radius: 3px; overflow: hidden; }
+        .meter-bar { height: 100%; width: 0; transition: 0.3s; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div style="display: flex; align-items: center;">
+            <button class="btn-menu" id="btn-hamburguer" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+            <strong style="margin-left: 10px; cursor: pointer;" onclick="voltarHome()">CONNECTER</strong>
+        </div>
+        <div class="nav-links" id="nav-links">
+            <span onclick="mostrarTela('login-empresa')">Entre como Empresa</span> | 
+            <span onclick="mostrarTela('login-candidato')">Entre como Candidato</span>
+        </div>
+    </nav>
+    <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+    <div class="sidebar" id="sidebar">
+        <div id="menu-contextual"></div>
+        <div class="menu-item" onclick="location.reload()" style="color: red; border-top: 2px solid #f0f0f0;"><i class="fas fa-power-off"></i> Sair</div>
+    </div>
+    <div class="main-container">
+        <div id="home">
+            <h1 style="color: #0d47a1; font-size: 3rem; margin-bottom: 40px;">CONNECTER</h1>
+            <button class="card-balao" onclick="mostrarTela('cad-empresa')">Cadastre-se como Empresa</button>
+            <button class="card-balao" onclick="mostrarTela('cad-candidato')">Cadastre-se como Candidato</button>
+        </div>
+        <div id="login-empresa" class="hidden">
+            <div class="box-container"><h2>Login Empresa</h2><label>CNPJ ou E-mail:</label><input type="text"><label>Senha:</label><input type="password"><button class="btn-acao" onclick="entrarFake('empresa')">ENTRAR</button></div>
+        </div>
+        <div id="cad-empresa" class="hidden">
+            <div class="box-container">
+                <h2>Cadastro Empresa</h2>
+                <label>E-mail Corporativo:</label><input type="email" id="e_email">
+                <label>Senha:</label><input type="password" id="e_pass" oninput="medirSenha(this.value, 'm1')">
+                <div class="meter"><div id="m1" class="meter-bar"></div></div>
+                <label>Nome da Empresa:</label><input type="text" id="e_nome">
+                <label>CNPJ (14 nº):</label><input type="text" maxlength="14" id="e_cnpj">
+                <label>Descrição:</label><textarea id="e_desc_cad" rows="3"></textarea>
+                <button class="btn-acao" onclick="salvar('empresa')">CADASTRAR E ENTRAR</button>
+            </div>
+        </div>
+        <div id="dashboard" class="hidden">
+            <div class="box-container"><h2>Bem-vindo ao Connecter</h2><p style="text-align: center; color: #666;">Use o menu lateral (☰) para acessar suas ferramentas.</p></div>
+        </div>
+        <div id="publicar-vagas" class="hidden">
+            <div class="box-container">
+                <h2>Publicar Nova Vaga</h2>
+                <label>Título da Vaga:</label><input type="text" id="v_titulo" placeholder="Ex: Vendedor">
+                <label>Tipo de Contrato:</label><select id="v_contrato"><option>CLT</option><option>PJ</option><option>Estágio</option></select>
+                <label>Salário:</label><input type="text" id="v_salario" placeholder="Ex: R$ 2.300,00">
+                <label>Requisitos (Clique no +):</label>
+                <div class="req-input-group"><input type="text" id="req_input" style="margin-bottom:0"><button class="btn-add" onclick="addRequisito()">+</button></div>
+                <div id="lista-requisitos" style="margin-bottom:20px"></div>
+                <label>Descrição:</label><textarea id="v_desc" rows="4"></textarea>
+                <button class="btn-acao" onclick="alert('Publicado!')">Publicar Agora</button>
+                <button class="btn-acao" style="background:#888; margin-top:10px" onclick="mostrarTela('dashboard')">Cancelar</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        const SB_URL = 'https://somngtdevyazwqonmayo.supabase.co'; 
+        const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNvbW5ndGRldnlhendxb25tYXlvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM1MTk2NTQsImV4cCI6MjA4OTA5NTY1NH0.RGf3ZMVw6n4GyIVroBBUoD7dmKQAOReUuAsew0DVBVw'; 
+        const _supabase = supabase.createClient(SB_URL, SB_KEY);
+        let requisitosVaga = [];
+
+        function addRequisito() {
+            const input = document.getElementById('req_input');
+            if(input.value.trim() === "") return;
+            requisitosVaga.push(input.value.trim());
+            input.value = "";
+            renderReqs();
+        }
+        function renderReqs() {
+            document.getElementById('lista-requisitos').innerHTML = requisitosVaga.map((r, i) => `
+                <div class="req-item"><span>• ${r}</span><button class="btn-del" onclick="requisitosVaga.splice(${i},1);renderReqs()"><i class="fas fa-trash"></i></button></div>
+            `).join('');
+        }
+        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('active'); document.getElementById('overlay').classList.toggle('active'); }
+        function mostrarTela(id) {
+            document.querySelectorAll('.main-container > div').forEach(div => div.classList.add('hidden'));
+            document.getElementById(id).classList.remove('hidden');
+        }
+        function entrarDireto(tipo) {
+            document.getElementById('nav-links').style.display = 'none';
+            document.getElementById('btn-hamburguer').style.display = 'block';
+            const menu = document.getElementById('menu-contextual');
+            if(tipo === 'empresa') menu.innerHTML = `<div class="menu-item" onclick="mostrarTela('publicar-vagas');toggleSidebar()"><i class="fas fa-briefcase"></i> Publicar Vagas</div>`;
+            mostrarTela('dashboard');
+        }
+        function medirSenha(s, id) {
+            const b = document.getElementById(id);
+            b.style.width = s.length > 7 ? "100%" : s.length > 4 ? "50%" : "20%";
+            b.style.background = s.length > 7 ? "green" : s.length > 4 ? "orange" : "red";
+        }
+        function salvar(tipo) { entrarDireto(tipo); }
+        function entrarFake(tipo) { entrarDireto(tipo); }
+        function voltarHome() { if(document.getElementById('btn-hamburguer').style.display !== 'block') mostrarTela('home'); }
+    </script>
+</body>
+</html>
