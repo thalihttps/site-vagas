@@ -9,16 +9,15 @@
     <style>
         body { margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; background-color: #e3f2fd; min-height: 100vh; overflow-x: hidden; }
         
-        /* Navbar Superior */
+        /* Navbar */
         .navbar { background: #0d47a1; color: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; position: fixed; width: 100%; top: 0; z-index: 1000; box-sizing: border-box; }
-        .nav-links { font-size: 13px; font-weight: bold; letter-spacing: 1px; }
+        .nav-links { font-size: 13px; font-weight: bold; letter-spacing: 1px; color: white; }
         .nav-links span { cursor: pointer; text-transform: uppercase; margin-left: 15px; }
 
-        /* Sidebar (Só aparece logado) */
+        /* Sidebar */
         .sidebar { position: fixed; left: -280px; top: 0; width: 280px; height: 100%; background: white; box-shadow: 2px 0 10px rgba(0,0,0,0.1); transition: 0.3s; z-index: 1001; padding-top: 60px; }
         .sidebar.active { left: 0; }
-        .menu-item { display: flex; align-items: center; padding: 15px 25px; color: #333; cursor: pointer; text-decoration: none; font-size: 14px; border-bottom: 1px solid #f0f0f0; }
-        .menu-item:hover { background: #f0f7ff; color: #0d47a1; }
+        .menu-item { display: flex; align-items: center; padding: 15px 25px; color: #333; cursor: pointer; font-size: 14px; border-bottom: 1px solid #f0f0f0; }
         .menu-item i { margin-right: 15px; width: 20px; text-align: center; }
         
         .btn-menu { background: none; border: none; color: white; font-size: 20px; cursor: pointer; display: none; }
@@ -28,14 +27,16 @@
         .main-container { padding: 120px 20px; display: flex; flex-direction: column; align-items: center; text-align: center; }
         .hidden { display: none !important; }
 
-        /* Estilo do Formulário (Exatamente como a imagem) */
+        /* Boxes e Form */
         .box-container { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 450px; text-align: left; }
-        .box-container h2 { margin: 0 0 20px; color: #000; font-size: 1.5rem; }
-        label { display: block; font-size: 14px; margin-bottom: 5px; color: #333; }
+        .box-container h2 { margin: 0 0 20px; color: #000; font-size: 1.5rem; text-align: center; }
+        label { display: block; font-size: 14px; margin-bottom: 5px; color: #333; font-weight: bold; }
         input, select, textarea { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; font-size: 14px; }
-        .btn-acao { width: 100%; background: #0d47a1; color: white; border: none; padding: 14px; border-radius: 8px; font-weight: bold; cursor: pointer; text-transform: uppercase; font-size: 14px; margin-top: 10px; }
+        .btn-acao { width: 100%; background: #0d47a1; color: white; border: none; padding: 14px; border-radius: 8px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
         
-        /* Medidor de Senha */
+        /* Botões Iniciais */
+        .card-balao { background: white; color: #0d47a1; padding: 40px 50px; border-radius: 60px; box-shadow: 0 8px 15px rgba(0,0,0,0.1); border: 2px solid transparent; cursor: pointer; font-weight: bold; margin: 10px; text-transform: uppercase; }
+
         .meter { height: 5px; background: #eee; margin-top: -10px; margin-bottom: 15px; border-radius: 3px; overflow: hidden; }
         .meter-bar { height: 100%; width: 0; transition: 0.3s; }
     </style>
@@ -63,8 +64,26 @@
     <div class="main-container">
         <div id="home">
             <h1 style="color: #0d47a1; font-size: 3rem; margin-bottom: 40px;">CONNECTER</h1>
-            <button style="background:white; color:#0d47a1; padding:40px 50px; border-radius:60px; box-shadow: 0 8px 15px rgba(0,0,0,0.1); border:2px solid transparent; cursor:pointer; font-weight:bold; margin:10px; text-transform:uppercase;" onclick="mostrarTela('cad-empresa')">Cadastre-se como Empresa</button>
-            <button style="background:white; color:#0d47a1; padding:40px 50px; border-radius:60px; box-shadow: 0 8px 15px rgba(0,0,0,0.1); border:2px solid transparent; cursor:pointer; font-weight:bold; margin:10px; text-transform:uppercase;" onclick="mostrarTela('cad-candidato')">Cadastre-se como Candidato</button>
+            <button class="card-balao" onclick="mostrarTela('cad-empresa')">Cadastre-se como Empresa</button>
+            <button class="card-balao" onclick="mostrarTela('cad-candidato')">Cadastre-se como Candidato</button>
+        </div>
+
+        <div id="login-empresa" class="hidden">
+            <div class="box-container">
+                <h2>Login Empresa</h2>
+                <label>CNPJ ou E-mail:</label><input type="text" id="l_e_user" placeholder="00.000.000/0000-00">
+                <label>Senha:</label><input type="password" id="l_e_pass" placeholder="********">
+                <button class="btn-acao" onclick="entrarFake('empresa')">ENTRAR</button>
+            </div>
+        </div>
+
+        <div id="login-candidato" class="hidden">
+            <div class="box-container">
+                <h2>Login Candidato</h2>
+                <label>CPF ou E-mail:</label><input type="text" id="l_c_user" placeholder="000.000.000-00">
+                <label>Senha:</label><input type="password" id="l_c_pass" placeholder="********">
+                <button class="btn-acao" onclick="entrarFake('candidato')">ENTRAR</button>
+            </div>
         </div>
 
         <div id="cad-empresa" class="hidden">
@@ -73,10 +92,8 @@
                 <label>E-mail Corporativo:</label><input type="email" id="e_email">
                 <label>Senha:</label><input type="password" id="e_pass" oninput="medirSenha(this.value, 'm1')">
                 <div class="meter"><div id="m1" class="meter-bar"></div></div>
-                
                 <label>Nome da Empresa:</label><input type="text" id="e_nome">
                 <label>CNPJ (14 nº):</label><input type="text" maxlength="14" id="e_cnpj">
-                
                 <label>Setor de Atuação:</label>
                 <select id="e_setor" onchange="document.getElementById('e_outro_div').className = this.value === 'Outros' ? '' : 'hidden'">
                     <option value="Tecnologia">Tecnologia</option>
@@ -85,10 +102,20 @@
                     <option value="Outros">Outros...</option>
                 </select>
                 <div id="e_outro_div" class="hidden"><label>Especifique:</label><input type="text" id="e_setor_outro"></div>
-                
-                <label>Descrição da Empresa:</label><textarea id="e_desc" rows="3"></textarea>
-                
+                <label>Descrição:</label><textarea id="e_desc" rows="3"></textarea>
                 <button class="btn-acao" onclick="salvar('empresa')">CADASTRAR E ENTRAR</button>
+            </div>
+        </div>
+
+        <div id="cad-candidato" class="hidden">
+            <div class="box-container">
+                <h2>Cadastro Candidato</h2>
+                <label>E-mail:</label><input type="email" id="c_email">
+                <label>Senha:</label><input type="password" id="c_pass" oninput="medirSenha(this.value, 'm2')">
+                <div class="meter"><div id="m2" class="meter-bar"></div></div>
+                <label>Nome Completo:</label><input type="text" id="c_nome">
+                <label>CPF (11 nº):</label><input type="text" maxlength="11" id="c_cpf">
+                <button class="btn-acao" onclick="salvar('candidato')">CADASTRAR E ENTRAR</button>
             </div>
         </div>
 
@@ -108,6 +135,22 @@
             document.getElementById('overlay').classList.toggle('active');
         }
 
+        function mostrarTela(id) {
+            ['home', 'login-empresa', 'login-candidato', 'cad-empresa', 'cad-candidato', 'dashboard'].forEach(t => {
+                if(document.getElementById(t)) document.getElementById(t).classList.add('hidden');
+            });
+            document.getElementById(id).classList.remove('hidden');
+
+            const nav = document.getElementById('nav-links');
+            if(id.includes('login')) {
+                nav.innerHTML = '<span onclick="mostrarTela(\'cad-empresa\')">Cadastre-se como Empresa</span> | <span onclick="mostrarTela(\'cad-candidato\')">Cadastre-se como Usuário</span>';
+            } else if(id === 'home') {
+                nav.innerHTML = '<span onclick="mostrarTela(\'login-empresa\')">Entre como Empresa</span> | <span onclick="mostrarTela(\'login-candidato\')">Entre como Candidato</span>';
+            }
+        }
+
+        function voltarHome() { if(document.getElementById('btn-hamburguer').style.display !== 'block') mostrarTela('home'); }
+
         function medirSenha(s, id) {
             const b = document.getElementById(id);
             if(s.length > 7) { b.style.width="100%"; b.style.background="green"; }
@@ -115,48 +158,23 @@
             else { b.style.width="20%"; b.style.background="red"; }
         }
 
-        function mostrarTela(id) {
-            ['home', 'cad-empresa', 'dashboard'].forEach(t => {
-                if(document.getElementById(t)) document.getElementById(t).classList.add('hidden');
-            });
-            document.getElementById(id).classList.remove('hidden');
-        }
-
-        async function salvar(tipo) {
-            const email = document.getElementById('e_email').value;
-            const nome = document.getElementById('e_nome').value;
-            const cnpj = document.getElementById('e_cnpj').value;
-            const setor = document.getElementById('e_setor').value;
-            const desc = document.getElementById('e_desc').value;
-
-            const { error } = await _supabase.from('empresas').insert([{ 
-                email, 
-                nome_empresa: nome, 
-                cnpj, 
-                area_atuacao: setor === 'Outros' ? document.getElementById('e_setor_outro').value : setor,
-                descricao: desc
-            }]);
-
-            if (error) {
-                if (error.code === '23505') alert("E-mail ou CNPJ já cadastrado!");
-                else alert("Erro: " + error.message);
-            } else {
-                entrarDireto('empresa', nome);
-            }
-        }
+        function entrarFake(tipo) { entrarDireto(tipo, 'Usuário'); }
 
         function entrarDireto(tipo, nome) {
             document.getElementById('nav-links').classList.add('hidden');
             document.getElementById('btn-hamburguer').style.display = 'block';
-            
             const menu = document.getElementById('menu-contextual');
-            menu.innerHTML = `
-                <div class="menu-item"><i class="fas fa-user-circle"></i> Meu Perfil</div>
-                <div class="menu-item"><i class="fas fa-list-ul"></i> Minhas vagas publicadas</div>
-                <div class="menu-item"><i class="fas fa-briefcase"></i> Publicar novas vagas</div>
-                <div class="menu-item"><i class="fas fa-headset"></i> Suporte</div>
-            `;
+            if(tipo === 'empresa') {
+                menu.innerHTML = `<div class="menu-item"><i class="fas fa-user-circle"></i> Meu Perfil</div><div class="menu-item"><i class="fas fa-briefcase"></i> Publicar Vagas</div><div class="menu-item"><i class="fas fa-headset"></i> Suporte</div>`;
+            } else {
+                menu.innerHTML = `<div class="menu-item"><i class="fas fa-user-circle"></i> Meu Perfil</div><div class="menu-item"><i class="fas fa-search"></i> Ver Vagas</div><div class="menu-item"><i class="fas fa-headset"></i> Suporte</div>`;
+            }
             mostrarTela('dashboard');
+        }
+
+        async function salvar(tipo) {
+            // No futuro, aqui entra a integração real com Supabase
+            entrarDireto(tipo, 'Novo Cadastro');
         }
     </script>
 </body>
