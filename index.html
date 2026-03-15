@@ -4,213 +4,148 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Connecter</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        body { 
-            margin: 0; 
-            padding: 0; 
-            font-family: 'Segoe UI', Arial, sans-serif; 
-            background-color: #e3f2fd; 
-            min-height: 100vh; 
-            display: flex; 
-            flex-direction: column; 
-        }
+        body { margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; background-color: #e3f2fd; min-height: 100vh; display: flex; flex-direction: column; }
+        .navbar { position: absolute; top: 0; width: 100%; display: flex; justify-content: flex-end; padding: 20px 40px; box-sizing: border-box; }
+        .nav-links { font-size: 13px; font-weight: bold; color: #0d47a1; letter-spacing: 1px; }
+        .nav-links span { cursor: pointer; text-transform: uppercase; }
+        .main-container { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 80px 20px; }
+        .site-title { color: #0d47a1; font-size: 3rem; margin-bottom: 40px; font-weight: bold; text-transform: uppercase; letter-spacing: 2px; cursor: pointer; }
+        .button-group { display: flex; gap: 20px; }
+        .card-balao { background-color: #ffffff; color: #0d47a1; padding: 40px 50px; border-radius: 60px; box-shadow: 0 8px 15px rgba(0,0,0,0.1); transition: all 0.2s ease; border: 2px solid transparent; cursor: pointer; text-transform: uppercase; font-weight: bold; font-size: 1.1rem; }
+        .card-balao:hover { border-color: #0d47a1; transform: translateY(-5px); }
 
-        /* Menu Superior */
-        .navbar { 
-            position: absolute; 
-            top: 0; 
-            width: 100%; 
-            display: flex; 
-            justify-content: flex-end; 
-            padding: 20px 40px; 
-            box-sizing: border-box; 
-        }
-
-        .nav-links { 
-            font-size: 13px; 
-            font-weight: bold; 
-            color: #0d47a1; 
-            letter-spacing: 1px; 
-        }
-
-        .nav-links span { 
-            cursor: pointer; 
-            text-transform: uppercase; 
-        }
-
-        /* Container Principal */
-        .main-container { 
-            flex: 1; 
-            display: flex; 
-            flex-direction: column; 
-            justify-content: center; 
-            align-items: center; 
-            text-align: center; 
-            padding-top: 60px;
-        }
-
-        .site-title { 
-            color: #0d47a1; 
-            font-size: 3rem; 
-            margin-bottom: 40px; 
-            font-weight: bold; 
-            text-transform: uppercase; 
-            letter-spacing: 2px; 
-        }
-
-        .button-group { 
-            display: flex; 
-            gap: 20px; 
-        }
-
-        /* Botões Centrais (Cards) */
-        .card-balao { 
-            background-color: #ffffff; 
-            color: #0d47a1; 
-            padding: 40px 50px; 
-            border-radius: 60px; 
-            box-shadow: 0 8px 15px rgba(0,0,0,0.1); 
-            transition: all 0.2s ease; 
-            border: 2px solid transparent; 
-            cursor: pointer; 
-            text-transform: uppercase; 
-            font-weight: bold; 
-            font-size: 1.1rem; 
-        }
-
-        .card-balao:hover { 
-            border-color: #0d47a1; 
-            transform: translateY(-5px); 
-        }
-
-        /* Telas de Login */
-        .login-box {
-            background-color: #ffffff;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            width: 320px;
-            text-align: left;
-        }
-
-        .login-box h2 {
-            margin-top: 0;
-            color: #0d47a1;
-            font-size: 1.2rem;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            font-size: 12px;
-            font-weight: bold;
-            color: #555;
-            margin-bottom: 5px;
-        }
-
-        input {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-sizing: border-box;
-        }
-
-        .btn-entrar {
-            width: 100%;
-            background-color: #0d47a1;
-            color: white;
-            border: none;
-            padding: 12px;
-            border-radius: 5px;
-            font-weight: bold;
-            cursor: pointer;
-            text-transform: uppercase;
-        }
-
-        .hidden { 
-            display: none; 
-        }
+        /* Estilo dos Formulários (Cadastro e Login) */
+        .box-container { background-color: #ffffff; padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 450px; text-align: left; }
+        .box-container h2 { margin-top: 0; color: #0d47a1; font-size: 1.2rem; text-align: center; margin-bottom: 20px; text-transform: uppercase; }
+        .section-title { background: #f0f0f0; padding: 5px 10px; margin: 15px 0 10px; font-size: 11px; color: #0d47a1; font-weight: bold; text-transform: uppercase; border-left: 3px solid #0d47a1; }
+        label { display: block; font-size: 12px; font-weight: bold; color: #555; margin-bottom: 5px; }
+        input, select, textarea { width: 100%; padding: 10px; margin-bottom: 12px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; font-family: inherit; }
+        .btn-acao { width: 100%; background-color: #0d47a1; color: white; border: none; padding: 12px; border-radius: 5px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
+        
+        /* Medidor de Senha */
+        .meter { height: 5px; background: #eee; margin-top: -10px; margin-bottom: 15px; border-radius: 3px; overflow: hidden; }
+        .meter-bar { height: 100%; width: 0; transition: 0.3s; }
+        .hidden { display: none; }
     </style>
 </head>
 <body>
 
     <nav class="navbar">
         <div class="nav-links" id="nav-content">
-            <span onclick="mostrarLogin('empresa')">Entre como Empresa</span> | 
-            <span onclick="mostrarLogin('candidato')">Entre como Candidato</span>
+            <span onclick="mostrarTela('login-empresa')">Entre como Empresa</span> | 
+            <span onclick="mostrarTela('login-candidato')">Entre como Candidato</span>
         </div>
     </nav>
 
     <div class="main-container">
-        <div id="home">
-            <h1 class="site-title" onclick="voltarHome()" style="cursor:pointer">Connecter</h1>
-            <div class="button-group">
-                <button class="card-balao" onclick="mostrarCadastro('empresa')">Cadastre-se como Empresa</button>
-                <button class="card-balao" onclick="mostrarCadastro('candidato')">Cadastre-se como Candidato</button>
-            </div>
+        <h1 class="site-title" onclick="voltarHome()">Connecter</h1>
+
+        <div id="home" class="button-group">
+            <button class="card-balao" onclick="mostrarTela('cad-empresa')">Cadastre-se como Empresa</button>
+            <button class="card-balao" onclick="mostrarTela('cad-candidato')">Cadastre-se como Candidato</button>
         </div>
 
         <div id="login-empresa" class="hidden">
-            <div class="login-box">
+            <div class="box-container">
                 <h2>Login Empresa</h2>
-                <label>CNPJ ou E-mail:</label>
-                <input type="text" placeholder="00.000.000/0000-00">
-                <label>Senha:</label>
-                <input type="password" placeholder="********">
-                <button class="btn-entrar">Entrar</button>
+                <label>CNPJ ou E-mail:</label><input type="text" placeholder="00.000.000/0000-00">
+                <label>Senha:</label><input type="password" placeholder="********">
+                <button class="btn-acao">Entrar</button>
             </div>
         </div>
 
         <div id="login-candidato" class="hidden">
-            <div class="login-box">
+            <div class="box-container">
                 <h2>Login Candidato</h2>
-                <label>CPF ou E-mail:</label>
-                <input type="text" placeholder="000.000.000-00">
-                <label>Senha:</label>
-                <input type="password" placeholder="********">
-                <button class="btn-entrar">Entrar</button>
+                <label>CPF ou E-mail:</label><input type="text" placeholder="000.000.000-00">
+                <label>Senha:</label><input type="password" placeholder="********">
+                <button class="btn-acao">Entrar</button>
+            </div>
+        </div>
+
+        <div id="cad-empresa" class="hidden">
+            <div class="box-container">
+                <h2>Cadastro Empresa</h2>
+                <div class="section-title">Acesso</div>
+                <label>E-mail Corporativo:</label><input type="email" id="e_email">
+                <label>Senha:</label><input type="password" oninput="medirSenha(this.value, 'm1')" id="e_pass">
+                <div class="meter"><div id="m1" class="meter-bar"></div></div>
+                
+                <div class="section-title">Dados da Empresa</div>
+                <label>Nome da Empresa:</label><input type="text" id="e_nome">
+                <label>CNPJ (14 nº):</label><input type="text" maxlength="14" id="e_cnpj">
+                <label>Área de Atuação:</label>
+                <select onchange="document.getElementById('e_outro_div').className = this.value === 'Outros' ? '' : 'hidden'">
+                    <option value="Tecnologia">Tecnologia</option>
+                    <option value="Saúde">Saúde</option>
+                    <option value="Educação">Educação</option>
+                    <option value="Outros">Outros...</option>
+                </select>
+                <div id="e_outro_div" class="hidden"><label>Especifique:</label><input type="text"></div>
+                <label>Descrição:</label><textarea rows="2" id="e_desc"></textarea>
+                <button class="btn-acao" onclick="salvar('empresa')">Cadastrar e Entrar</button>
+            </div>
+        </div>
+
+        <div id="cad-candidato" class="hidden">
+            <div class="box-container">
+                <h2>Cadastro Candidato</h2>
+                <div class="section-title">Acesso</div>
+                <label>E-mail:</label><input type="email" id="c_email">
+                <label>Senha:</label><input type="password" oninput="medirSenha(this.value, 'm2')" id="c_pass">
+                <div class="meter"><div id="m2" class="meter-bar"></div></div>
+
+                <div class="section-title">Dados Pessoais</div>
+                <label>Nome Completo:</label><input type="text" id="c_nome">
+                <label>CPF (11 nº):</label><input type="text" maxlength="11" id="c_cpf">
+                <label>Telefone:</label><input type="text" id="c_tel">
+                <label>LinkedIn (Opcional):</label><input type="text" id="c_link">
+                <button class="btn-acao" onclick="salvar('candidato')">Cadastrar e Entrar</button>
             </div>
         </div>
     </div>
 
     <script>
-        const nav = document.getElementById('nav-content');
+        const SB_URL = 'https://somngtdevyazwqonmayo.supabase.co'; 
+        const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNvbW5ndGRldnlhendxb25tYXlvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM1MTk2NTQsImV4cCI6MjA4OTA5NTY1NH0.RGf3ZMVw6n4GyIVroBBUoD7dmKQAOReUuAsew0DVBVw'; 
+        const _supabase = supabase.createClient(SB_URL, SB_KEY);
 
-        function mostrarLogin(tipo) {
-            // Esconde tudo
-            document.getElementById('home').classList.add('hidden');
-            document.getElementById('login-empresa').classList.add('hidden');
-            document.getElementById('login-candidato').classList.add('hidden');
+        function mostrarTela(id) {
+            const telas = ['home', 'login-empresa', 'login-candidato', 'cad-empresa', 'cad-candidato'];
+            telas.forEach(t => document.getElementById(t).classList.add('hidden'));
+            document.getElementById(id).classList.remove('hidden');
 
-            // Muda o menu superior conforme solicitado
-            nav.innerHTML = '<span onclick="mostrarCadastro(\'empresa\')">Cadastre-se como Empresa</span> | <span onclick="mostrarCadastro(\'candidato\')">Cadastre-se como Usuário</span>';
-
-            // Mostra o login selecionado
-            if(tipo === 'empresa') {
-                document.getElementById('login-empresa').classList.remove('hidden');
+            const nav = document.getElementById('nav-content');
+            if(id.includes('login')) {
+                nav.innerHTML = '<span onclick="mostrarTela(\'cad-empresa\')">Cadastre-se como Empresa</span> | <span onclick="mostrarTela(\'cad-candidato\')">Cadastre-se como Usuário</span>';
             } else {
-                document.getElementById('login-candidato').classList.remove('hidden');
+                nav.innerHTML = '<span onclick="mostrarTela(\'login-empresa\')">Entre como Empresa</span> | <span onclick="mostrarTela(\'login-candidato\')">Entre como Candidato</span>';
             }
         }
 
-        function mostrarCadastro(tipo) {
-            // Placeholder para a Parte 3 (Formulários de cadastro)
-            alert("Em breve: Formulário de Cadastro para " + tipo);
-            voltarHome();
+        function voltarHome() { mostrarTela('home'); }
+
+        function medirSenha(s, id) {
+            const b = document.getElementById(id);
+            if(s.length > 7) { b.style.width="100%"; b.style.background="green"; }
+            else if(s.length > 4) { b.style.width="50%"; b.style.background="orange"; }
+            else { b.style.width="20%"; b.style.background="red"; }
         }
 
-        function voltarHome() {
-            document.getElementById('home').classList.remove('hidden');
-            document.getElementById('login-empresa').classList.add('hidden');
-            document.getElementById('login-candidato').classList.add('hidden');
-            
-            // Volta o menu para o estado inicial
-            nav.innerHTML = '<span onclick="mostrarLogin(\'empresa\')">Entre como Empresa</span> | <span onclick="mostrarLogin(\'candidato\')">Entre como Candidato</span>';
+        async function salvar(tipo) {
+            const tab = tipo === 'empresa' ? 'empresas' : 'candidatos';
+            const prefixo = tipo === 'empresa' ? 'e_' : 'c_';
+            const dados = {
+                email: document.getElementById(prefixo + 'email').value,
+                [tipo === 'empresa' ? 'nome_empresa' : 'nome_completo']: document.getElementById(prefixo + 'nome').value,
+                [tipo === 'empresa' ? 'cnpj' : 'cpf']: document.getElementById(prefixo + 'doc' || prefixo + (tipo === 'empresa' ? 'cnpj' : 'cpf')).value
+            };
+            const { error } = await _supabase.from(tab).insert([dados]);
+            if(error) alert(error.message);
+            else alert("Cadastro realizado com sucesso!");
         }
     </script>
-
 </body>
 </html>
