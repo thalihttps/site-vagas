@@ -46,6 +46,7 @@
             justify-content: center; 
             align-items: center; 
             text-align: center; 
+            padding-top: 60px;
         }
 
         .site-title { 
@@ -82,8 +83,55 @@
             transform: translateY(-5px); 
         }
 
-        .card-balao:active { 
-            transform: translateY(2px); 
+        /* Telas de Login */
+        .login-box {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 320px;
+            text-align: left;
+        }
+
+        .login-box h2 {
+            margin-top: 0;
+            color: #0d47a1;
+            font-size: 1.2rem;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 12px;
+            font-weight: bold;
+            color: #555;
+            margin-bottom: 5px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        .btn-entrar {
+            width: 100%;
+            background-color: #0d47a1;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        .hidden { 
+            display: none; 
         }
     </style>
 </head>
@@ -91,19 +139,62 @@
 
     <nav class="navbar">
         <div class="nav-links">
-            <span id="login-empresa">Entre como Empresa</span> | 
-            <span id="login-candidato">Entre como Candidato</span>
+            <span onclick="mostrarLogin('empresa')">Entre como Empresa</span> | 
+            <span onclick="mostrarLogin('candidato')">Entre como Candidato</span>
         </div>
     </nav>
 
     <div class="main-container">
-        <h1 class="site-title">Connecter</h1>
-        
-        <div class="button-group">
-            <button class="card-balao" id="cad-empresa">Cadastre-se como Empresa</button>
-            <button class="card-balao" id="cad-candidato">Cadastre-se como Candidato</button>
+        <div id="home">
+            <h1 class="site-title" onclick="voltarHome()" style="cursor:pointer">Connecter</h1>
+            <div class="button-group">
+                <button class="card-balao">Cadastre-se como Empresa</button>
+                <button class="card-balao">Cadastre-se como Candidato</button>
+            </div>
+        </div>
+
+        <div id="login-empresa" class="hidden">
+            <div class="login-box">
+                <h2>Login Empresa</h2>
+                <label>CNPJ ou E-mail:</label>
+                <input type="text" placeholder="00.000.000/0000-00">
+                <label>Senha:</label>
+                <input type="password" placeholder="********">
+                <button class="btn-entrar">Entrar</button>
+            </div>
+        </div>
+
+        <div id="login-candidato" class="hidden">
+            <div class="login-box">
+                <h2>Login Candidato</h2>
+                <label>CPF ou E-mail:</label>
+                <input type="text" placeholder="000.000.000-00">
+                <label>Senha:</label>
+                <input type="password" placeholder="********">
+                <button class="btn-entrar">Entrar</button>
+            </div>
         </div>
     </div>
+
+    <script>
+        function mostrarLogin(tipo) {
+            document.getElementById('home').classList.add('hidden');
+            document.getElementById('login-empresa').classList.add('hidden');
+            document.getElementById('login-candidato').classList.add('hidden');
+
+            if(tipo === 'empresa') {
+                document.getElementById('login-empresa').classList.remove('hidden');
+            } else if(tipo === 'candidato') {
+                document.getElementById('login-candidato').classList.remove('hidden');
+            }
+        }
+
+        function voltarHome() {
+            document.getElementById('home').classList.remove('hidden');
+            document.getElementById('login-empresa').classList.add('hidden');
+            document.getElementById('login-candidato').classList.add('hidden');
+        }
+    </script>
 
 </body>
 </html>
