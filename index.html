@@ -83,11 +83,7 @@
                 <div class="meter"><div id="m1" class="meter-bar"></div></div>
                 <label>Nome da Empresa:</label><input type="text" id="e_nome">
                 <label>CNPJ (14 nº):</label><input type="text" maxlength="14" id="e_cnpj">
-                <label>Setor de Atuação:</label>
-                <select id="e_setor" onchange="document.getElementById('e_outro_div').className = this.value === 'Outros' ? '' : 'hidden'">
-                    <option>Tecnologia</option><option>Saúde</option><option>Educação</option><option value="Outros">Outros...</option>
-                </select>
-                <div id="e_outro_div" class="hidden"><label>Especifique:</label><input type="text" id="e_outro_val"></div>
+                <label>Setor:</label><select id="e_setor"><option>Tecnologia</option><option>Saúde</option><option>Educação</option></select>
                 <label>Descrição:</label><textarea id="e_desc_cad" rows="3"></textarea>
                 <button class="btn-acao" onclick="salvar('empresa')">CADASTRAR E ENTRAR</button>
             </div>
@@ -109,10 +105,6 @@
                 <h2>Perfil do Candidato</h2>
                 <div class="profile-pic-container"><img src="https://via.placeholder.com/150" class="profile-pic" id="foto-c-prev"><label class="upload-btn"><i class="fas fa-camera"></i> Alterar Foto<input type="file" style="display:none" onchange="previewImage(this, 'foto-c-prev')"></label></div>
                 <label>País:</label><input type="text" placeholder="Brasil"><label>Estado:</label><input type="text"><label>Cidade:</label><input type="text">
-                <label>Escolaridade:</label>
-                <select>
-                    <option>Ensino Fundamental Cursando</option><option>Ensino Fundamental Completo</option><option>Ensino Médio Cursando</option><option>Ensino Médio Completo</option><option>Ensino Superior Cursando</option><option>Ensino Superior Completo</option><option>MBA Cursando</option><option>MBA Completo</option>
-                </select>
                 <button class="btn-acao">Salvar Perfil</button>
             </div>
         </div>
@@ -123,6 +115,31 @@
                 <div class="profile-pic-container"><img src="https://via.placeholder.com/150" class="profile-pic" id="foto-e-prev"><label class="upload-btn"><i class="fas fa-camera"></i> Alterar Logo<input type="file" style="display:none" onchange="previewImage(this, 'foto-e-prev')"></label></div>
                 <label>Descrição da Empresa:</label><textarea id="e_perf_desc" rows="5"></textarea>
                 <label>País:</label><input type="text" placeholder="Brasil"><label>Estado:</label><input type="text"><label>Cidade:</label><input type="text"><button class="btn-acao">Atualizar Perfil</button>
+            </div>
+        </div>
+
+        <div id="publicar-vagas" class="hidden">
+            <div class="box-container">
+                <h2>Publicar Nova Vaga</h2>
+                <label>Título da Vaga:</label>
+                <input type="text" id="v_titulo" placeholder="Ex: Desenvolvedor Front-end Junior">
+                
+                <label>Tipo de Contrato:</label>
+                <select id="v_contrato">
+                    <option>CLT (Efetivo)</option>
+                    <option>PJ (Prestador de Serviço)</option>
+                    <option>Estágio</option>
+                    <option>Temporário</option>
+                </select>
+
+                <label>Salário (Opcional):</label>
+                <input type="text" id="v_salario" placeholder="Ex: R$ 3.000,00 ou A combinar">
+
+                <label>Descrição e Requisitos:</label>
+                <textarea id="v_desc" rows="6" placeholder="Descreva as responsabilidades e o que você busca no candidato..."></textarea>
+
+                <button class="btn-acao" onclick="alert('Vaga enviada para aprovação!')">Publicar Vaga agora</button>
+                <button class="btn-acao" style="background:#888; margin-top:10px;" onclick="mostrarTela('dashboard')">Cancelar</button>
             </div>
         </div>
     </div>
@@ -138,25 +155,20 @@
         }
 
         function mostrarTela(id) {
-            ['home', 'login-empresa', 'login-candidato', 'cad-empresa', 'cad-candidato', 'perfil-candidato', 'perfil-empresa', 'dashboard'].forEach(t => {
+            ['home', 'login-empresa', 'login-candidato', 'cad-empresa', 'cad-candidato', 'perfil-candidato', 'perfil-empresa', 'dashboard', 'publicar-vagas'].forEach(t => {
                 if(document.getElementById(t)) document.getElementById(t).classList.add('hidden');
             });
             document.getElementById(id).classList.remove('hidden');
-            if(document.getElementById('btn-hamburguer').style.display !== 'block') {
-                const nav = document.getElementById('nav-links');
-                if(id.includes('login')) nav.innerHTML = '<span onclick="mostrarTela(\'cad-empresa\')">Cadastre-se como Empresa</span> | <span onclick="mostrarTela(\'cad-candidato\')">Cadastre-se como Usuário</span>';
-                else if(id === 'home') nav.innerHTML = '<span onclick="mostrarTela(\'login-empresa\')">Entre como Empresa</span> | <span onclick="mostrarTela(\'login-candidato\')">Entre como Candidato</span>';
-            }
         }
-
-        function entrarFake(tipo) { entrarDireto(tipo); }
 
         function entrarDireto(tipo) {
             document.getElementById('nav-links').style.display = 'none';
             document.getElementById('btn-hamburguer').style.display = 'block';
             const menu = document.getElementById('menu-contextual');
             if(tipo === 'empresa') {
-                menu.innerHTML = `<div class="menu-item" onclick="mostrarTela('perfil-empresa'); toggleSidebar();"><i class="fas fa-user-circle"></i> Meu Perfil</div><div class="menu-item"><i class="fas fa-briefcase"></i> Publicar Vagas</div>`;
+                menu.innerHTML = `
+                    <div class="menu-item" onclick="mostrarTela('perfil-empresa'); toggleSidebar();"><i class="fas fa-user-circle"></i> Meu Perfil</div>
+                    <div class="menu-item" onclick="mostrarTela('publicar-vagas'); toggleSidebar();"><i class="fas fa-briefcase"></i> Publicar Vagas</div>`;
             } else {
                 menu.innerHTML = `<div class="menu-item" onclick="mostrarTela('perfil-candidato'); toggleSidebar();"><i class="fas fa-user-circle"></i> Meu Perfil</div><div class="menu-item"><i class="fas fa-search"></i> Ver Vagas</div>`;
             }
@@ -178,11 +190,8 @@
             }
         }
 
-        function salvar(tipo) { 
-            if(tipo === 'empresa') document.getElementById('e_perf_desc').value = document.getElementById('e_desc_cad').value;
-            entrarDireto(tipo); 
-        }
-
+        function salvar(tipo) { entrarDireto(tipo); }
+        function entrarFake(tipo) { entrarDireto(tipo); }
         function voltarHome() { if(document.getElementById('btn-hamburguer').style.display !== 'block') mostrarTela('home'); }
     </script>
 </body>
