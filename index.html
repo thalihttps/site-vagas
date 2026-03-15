@@ -89,3 +89,137 @@
         <button class="card-balao" onclick="abrirForm('empresa')">Cadastre sua Empresa</button>
         <button class="card-balao" onclick="abrirForm('curriculo')">Cadastre seu Currículo</button>
     </div>
+
+    <div class="main-container hidden" id="tela-form">
+        <div id="container-form-dinamico"></div>
+    </div>
+
+    <script>
+        // CONFIGURAÇÃO SUPABASE INSERIDA
+        const SB_URL = 'https://somngtdevyazwqonmayo.supabase.co'; 
+        const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNvbW5ndGRldnlhendxb25tYXlvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM1MTk2NTQsImV4cCI6MjA4OTA5NTY1NH0.RGf3ZMVw6n4GyIVroBBUoD7dmKQAOReUuAsew0DVBVw'; 
+        
+        const _supabase = supabase.createClient(SB_URL, SB_KEY);
+        let tipoAtual = '';
+
+        function abrirForm(tipo) {
+            tipoAtual = tipo;
+            document.getElementById('tela-inicial').classList.add('hidden');
+            document.getElementById('tela-form').classList.remove('hidden');
+            const container = document.getElementById('container-form-dinamico');
+
+            if(tipo === 'empresa') {
+                container.innerHTML = `
+                <div class="form-cadastro">
+                    <div class="form-header">Novo Cadastro de Empresa</div>
+                    <div class="form-body">
+                        <div class="section-title">Dados da Organização</div>
+                        <label>Nome da Empresa:</label>
+                        <input type="text" id="emp_nome">
+
+                        <div class="row">
+                            <div class="col">
+                                <label>Setor/Área de atuação:</label>
+                                <select id="emp_setor" onchange="verificarOutros(this.value)">
+                                    <option value="">Selecione</option>
+                                    <option value="Saúde">Saúde</option>
+                                    <option value="Tecnologia">Tecnologia</option>
+                                    <option value="Administração">Administração</option>
+                                    <option value="Educação">Educação</option>
+                                    <option value="Vendas">Vendas/Comércio</option>
+                                    <option value="Logística">Logística</option>
+                                    <option value="Indústria">Indústria</option>
+                                    <option value="Outros">Outros...</option>
+                                </select>
+                            </div>
+                            <div class="col">
+                                <label>CNPJ:</label>
+                                <input type="text" id="emp_cnpj" placeholder="00.000.000/0000-00">
+                            </div>
+                        </div>
+
+                        <div id="div_outros" class="hidden">
+                            <label>Especifique o Ramo:</label>
+                            <input type="text" id="emp_setor_outro">
+                        </div>
+
+                        <label>Descrição da Empresa:</label>
+                        <textarea id="emp_desc" rows="3"></textarea>
+
+                        <div class="section-title">Dados do Recrutador</div>
+                        <div class="row">
+                            <div class="col"><label>Nome:</label><input type="text" id="rec_nome"></div>
+                            <div class="col"><label>E-mail Corporativo:</label><input type="email" id="rec_email"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col"><label>Telefone:</label><input type="text" id="rec_tel"></div>
+                            <div class="col"><label>Cargo:</label><input type="text" id="rec_cargo"></div>
+                        </div>
+
+                        <button class="btn-cadastrar-final" onclick="salvarNoBanco()">CADASTRAR</button>
+                        <a href="#" class="link-voltar" onclick="voltar()">Cancelar</a>
+                    </div>
+                </div>`;
+            } else {
+                container.innerHTML = `
+                <div class="form-cadastro">
+                    <div class="form-header">Novo Cadastro de Candidato</div>
+                    <div class="form-body">
+                        <label>Nome Completo:</label><input type="text" id="c_nome">
+                        <label>CPF:</label><input type="text" id="c_cpf">
+                        <label>Cargo Pretendido:</label><input type="text" id="c_cargo">
+                        <button class="btn-cadastrar-final" onclick="salvarNoBanco()">CADASTRAR</button>
+                        <a href="#" class="link-voltar" onclick="voltar()">Cancelar</a>
+                    </div>
+                </div>`;
+            }
+        }
+
+        function verificarOutros(valor) {
+            const divOutros = document.getElementById('div_outros');
+            if (valor === 'Outros') divOutros.classList.remove('hidden');
+            else divOutros.classList.add('hidden');
+        }
+
+        function voltar() {
+            document.getElementById('tela-form').classList.add('hidden');
+            document.getElementById('tela-inicial').classList.remove('hidden');
+        }
+
+        async function salvarNoBanco() {
+            let dados = {};
+            let tabela = '';
+
+            if (tipoAtual === 'empresa') {
+                tabela = 'empresas';
+                const setorSel = document.getElementById('emp_setor').value;
+                dados = {
+                    nome_empresa: document.getElementById('emp_nome').value,
+                    setor: setorSel === 'Outros' ? document.getElementById('emp_setor_outro').value : setorSel,
+                    cnpj: document.getElementById('emp_cnpj').value,
+                    descricao: document.getElementById('emp_desc').value,
+                    recrutador_nome: document.getElementById('rec_nome').value,
+                    recrutador_email: document.getElementById('rec_email').value,
+                    recrutador_tel: document.getElementById('rec_tel').value,
+                    recrutador_cargo: document.getElementById('rec_cargo').value
+                };
+            } else {
+                tabela = 'candidatos';
+                dados = {
+                    nome_completo: document.getElementById('c_nome').value,
+                    cpf: document.getElementById('c_cpf').value,
+                    cargo: document.getElementById('c_cargo').value
+                };
+            }
+
+            const { error } = await _supabase.from(tabela).insert([dados]);
+
+            if (error) alert("Erro: " + error.message);
+            else {
+                alert("Cadastro realizado com sucesso!");
+                voltar();
+            }
+        }
+    </script>
+</body>
+</html>
