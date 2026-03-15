@@ -8,39 +8,23 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body { margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; background-color: #e3f2fd; min-height: 100vh; overflow-x: hidden; }
-        
-        .navbar { background: #0d47a1; color: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; position: fixed; width: 100%; top: 0; z-index: 1000; box-sizing: border-box; }
-        .nav-links { font-size: 13px; font-weight: bold; color: white; }
-        .nav-links span { cursor: pointer; text-transform: uppercase; margin-left: 15px; }
-
-        .sidebar { position: fixed; left: -280px; top: 0; width: 280px; height: 100%; background: white; box-shadow: 2px 0 10px rgba(0,0,0,0.1); transition: 0.3s; z-index: 1001; padding-top: 60px; }
+        .navbar { background: #0d47a1; color: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; position: fixed; width: 100%; top: 0; z-index: 1000; box-sizing: border-box; height: 70px; }
+        .nav-links span { cursor: pointer; text-transform: uppercase; margin-left: 15px; font-size: 13px; font-weight: bold; }
+        .sidebar { position: fixed; left: -280px; top: 0; width: 280px; height: 100%; background: white; box-shadow: 2px 0 10px rgba(0,0,0,0.1); transition: 0.3s; z-index: 1001; padding-top: 80px; }
         .sidebar.active { left: 0; }
         .menu-item { display: flex; align-items: center; padding: 15px 25px; color: #333; cursor: pointer; font-size: 14px; border-bottom: 1px solid #f0f0f0; }
-        .menu-item:hover { background: #f0f7ff; color: #0d47a1; }
-        .menu-item i { margin-right: 15px; width: 20px; text-align: center; }
-        
-        .btn-menu { background: none; border: none; color: white; font-size: 20px; cursor: pointer; display: none; }
+        .btn-menu { background: none; border: none; color: white; font-size: 24px; cursor: pointer; display: none; }
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); display: none; z-index: 999; }
         .overlay.active { display: block; }
-
-        .main-container { padding: 120px 20px; display: flex; flex-direction: column; align-items: center; text-align: center; }
+        .main-container { padding: 120px 20px 40px; display: flex; flex-direction: column; align-items: center; text-align: center; }
         .hidden { display: none !important; }
-
         .box-container { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 500px; text-align: left; margin-bottom: 20px; }
-        .box-container h2 { margin: 0 0 20px; color: #0d47a1; font-size: 1.5rem; text-align: center; border-bottom: 2px solid #e3f2fd; padding-bottom: 10px; }
-        label { display: block; font-size: 13px; margin-bottom: 5px; color: #555; font-weight: bold; }
+        .box-container h2 { margin-top: 0; color: #0d47a1; text-align: center; border-bottom: 2px solid #e3f2fd; padding-bottom: 10px; }
+        label { display: block; font-size: 13px; margin-bottom: 5px; font-weight: bold; color: #555; }
         input, select, textarea { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; }
         .btn-acao { width: 100%; background: #0d47a1; color: white; border: none; padding: 14px; border-radius: 8px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
-        
-        .card-balao { background: white; color: #0d47a1; padding: 40px 50px; border-radius: 60px; box-shadow: 0 8px 15px rgba(0,0,0,0.1); border: 2px solid transparent; cursor: pointer; font-weight: bold; margin: 10px; text-transform: uppercase; }
-
-        .req-input-group { display: flex; gap: 10px; margin-bottom: 10px; }
-        .btn-add { background: #0d47a1; color: white; border: none; border-radius: 8px; padding: 0 15px; cursor: pointer; font-size: 20px; }
-        .req-item { display: flex; justify-content: space-between; align-items: center; background: #f0f7ff; padding: 8px 12px; border-radius: 5px; margin-bottom: 5px; border: 1px solid #d1e9ff; font-size: 14px; }
-        
-        .profile-pic { width: 120px; height: 120px; border-radius: 50%; border: 3px solid #0d47a1; object-fit: cover; display: block; margin: 0 auto 20px; background: #eee; }
-        .meter { height: 5px; background: #eee; margin-top: -10px; margin-bottom: 15px; border-radius: 3px; overflow: hidden; }
-        .meter-bar { height: 100%; width: 0; transition: 0.3s; }
+        .card-balao { background: white; color: #0d47a1; padding: 40px 50px; border-radius: 60px; box-shadow: 0 8px 15px rgba(0,0,0,0.1); border: 2px solid transparent; cursor: pointer; font-weight: bold; margin: 10px; text-transform: uppercase; width: 300px; }
+        .req-item { display: flex; justify-content: space-between; padding: 8px; background: #f0f7ff; margin-bottom: 5px; border-radius: 5px; border: 1px solid #d1e9ff; }
     </style>
 </head>
 <body>
@@ -48,9 +32,9 @@
     <nav class="navbar">
         <div style="display: flex; align-items: center;">
             <button class="btn-menu" id="btn-hamburguer" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
-            <strong style="margin-left: 10px; cursor: pointer;" onclick="location.reload()">CONNECTER</strong>
+            <strong style="margin-left: 10px; cursor: pointer; font-size: 20px;" onclick="location.reload()">CONNECTER</strong>
         </div>
-        <div class="nav-links" id="nav-links">
+        <div id="nav-links" class="nav-links">
             <span onclick="mostrarTela('login-empresa')">Entre como Empresa</span> | 
             <span onclick="mostrarTela('login-candidato')">Entre como Candidato</span>
         </div>
@@ -66,27 +50,19 @@
     <div class="main-container">
         <div id="home">
             <h1 style="color: #0d47a1; font-size: 3rem; margin-bottom: 40px;">CONNECTER</h1>
-            <button class="card-balao" onclick="mostrarTela('cad-empresa')">Cadastre-se como Empresa</button>
-            <button class="card-balao" onclick="mostrarTela('cad-candidato')">Cadastre-se como Candidato</button>
-        </div>
-
-        <div id="login-empresa" class="hidden">
-            <div class="box-container"><h2>Login Empresa</h2><label>CNPJ ou E-mail:</label><input type="text"><label>Senha:</label><input type="password"><button class="btn-acao" onclick="entrarFake('empresa')">ENTRAR</button></div>
-        </div>
-        <div id="login-candidato" class="hidden">
-            <div class="box-container"><h2>Login Candidato</h2><label>CPF ou E-mail:</label><input type="text"><label>Senha:</label><input type="password"><button class="btn-acao" onclick="entrarFake('candidato')">ENTRAR</button></div>
+            <button class="card-balao" onclick="mostrarTela('cad-empresa')">Cadastre-se Empresa</button>
+            <button class="card-balao" onclick="mostrarTela('cad-candidato')">Cadastre-se Candidato</button>
         </div>
 
         <div id="cad-empresa" class="hidden">
             <div class="box-container">
                 <h2>Cadastro Empresa</h2>
                 <label>E-mail Corporativo:</label><input type="email" id="e_email">
-                <label>Senha:</label><input type="password" oninput="medirSenha(this.value, 'm1')">
-                <div class="meter"><div id="m1" class="meter-bar"></div></div>
-                <label>Nome da Empresa:</label><input type="text" id="e_nome">
-                <label>CNPJ:</label><input type="text" maxlength="14" id="e_cnpj">
+                <label>Senha:</label><input type="password" id="e_pass">
+                <label>Nome Empresa:</label><input type="text" id="e_nome">
+                <label>CNPJ:</label><input type="text" id="e_cnpj">
                 <label>Descrição:</label><textarea id="e_desc_cad" rows="3"></textarea>
-                <button class="btn-acao" onclick="salvar('empresa')">CADASTRAR E ENTRAR</button>
+                <button class="btn-acao" onclick="executarEntrada('empresa')">CADASTRAR E ENTRAR</button>
             </div>
         </div>
 
@@ -94,50 +70,117 @@
             <div class="box-container">
                 <h2>Cadastro Candidato</h2>
                 <label>E-mail Pessoal:</label><input type="email">
-                <label>Senha:</label><input type="password" oninput="medirSenha(this.value, 'm2')">
-                <div class="meter"><div id="m2" class="meter-bar"></div></div>
+                <label>Senha:</label><input type="password">
                 <label>Nome Completo:</label><input type="text">
-                <label>CPF:</label><input type="text" maxlength="11">
-                <button class="btn-acao" onclick="salvar('candidato')">CADASTRAR E ENTRAR</button>
+                <label>CPF:</label><input type="text">
+                <button class="btn-acao" onclick="executarEntrada('candidato')">CADASTRAR E ENTRAR</button>
             </div>
         </div>
 
-        <div id="dashboard" class="hidden"><div class="box-container"><h2>Bem-vindo!</h2><p>Use a Sidebar (☰) para navegar.</p></div></div>
+        <div id="login-empresa" class="hidden">
+            <div class="box-container">
+                <h2>Login Empresa</h2>
+                <label>CNPJ ou E-mail:</label><input type="text">
+                <label>Senha:</label><input type="password">
+                <button class="btn-acao" onclick="executarEntrada('empresa')">ENTRAR</button>
+            </div>
+        </div>
+
+        <div id="login-candidato" class="hidden">
+            <div class="box-container">
+                <h2>Login Candidato</h2>
+                <label>CPF ou E-mail:</label><input type="text">
+                <label>Senha:</label><input type="password">
+                <button class="btn-acao" onclick="executarEntrada('candidato')">ENTRAR</button>
+            </div>
+        </div>
+
+        <div id="dashboard" class="hidden">
+            <div class="box-container">
+                <h2>Bem-vindo ao Connecter</h2>
+                <p>O acesso foi autorizado. Abra o menu lateral (☰) para gerenciar sua conta.</p>
+            </div>
+        </div>
 
         <div id="perfil-empresa" class="hidden">
             <div class="box-container">
                 <h2>Perfil da Empresa</h2>
-                <img src="https://via.placeholder.com/150" class="profile-pic" id="foto-e-prev">
-                <label>Descrição:</label><textarea id="e_perf_desc" rows="4"></textarea>
-                <label>Requisitos Dinâmicos (+):</label>
-                <div class="req-input-group">
-                    <input type="text" id="req_p_input" style="margin:0" placeholder="Digite um requisito">
-                    <button class="btn-add" onclick="addReq()">+</button>
+                <label>Descrição:</label><textarea id="e_perf_desc" rows="5"></textarea>
+                <label>Adicionar Requisitos (+):</label>
+                <div style="display:flex; gap:10px;">
+                    <input type="text" id="req_perf_input" style="margin:0"><button class="btn-acao" style="width:50px" onclick="addReq()">+</button>
                 </div>
-                <div id="lista-perfil-reqs" style="margin-bottom:15px"></div>
-                <label>País:</label><input type="text"><label>Estado:</label><input type="text"><button class="btn-acao">Atualizar</button>
-            </div>
-        </div>
-
-        <div id="publicar-vagas" class="hidden">
-            <div class="box-container">
-                <h2>Publicar Vaga</h2>
-                <label>Título:</label><input type="text">
-                <label>Tipo de Contrato:</label><select><option>CLT</option><option>PJ</option></select>
-                <label>Salário:</label><input type="text">
-                <label>Requisitos (+):</label>
-                <div class="req-input-group"><input type="text" id="req_v_input" style="margin:0"><button class="btn-add" onclick="addReqVaga()">+</button></div>
-                <div id="lista-vaga-reqs" style="margin-bottom:15px"></div>
-                <label>Descrição Atividades:</label><textarea rows="3"></textarea>
-                <button class="btn-acao" onclick="alert('Vaga Publicada!')">Publicar</button>
+                <div id="lista-p" style="margin-top:10px"></div>
+                <button class="btn-acao" style="margin-top:20px">Atualizar Perfil</button>
             </div>
         </div>
     </div>
 
     <script>
-        let reqsP = []; let reqsV = [];
+        // Função principal de navegação
+        function mostrarTela(id) {
+            // Esconde todas as divs filhas da main-container
+            const telas = document.querySelectorAll('.main-container > div');
+            telas.forEach(tela => tela.classList.add('hidden'));
+            
+            // Mostra a tela desejada
+            const telaAlvo = document.getElementById(id);
+            if(telaAlvo) {
+                telaAlvo.classList.remove('hidden');
+            }
+
+            // Ajusta o menu superior se não estiver logado
+            const btnHamburguer = document.getElementById('btn-hamburguer');
+            if(window.getComputedStyle(btnHamburguer).display === 'none') {
+                const navLinks = document.getElementById('nav-links');
+                if(id.includes('login')) {
+                    navLinks.innerHTML = '<span onclick="mostrarTela(\'cad-empresa\')">Cadastro Empresa</span> | <span onclick="mostrarTela(\'cad-candidato\')">Cadastro Candidato</span>';
+                } else if(id === 'home') {
+                    navLinks.innerHTML = '<span onclick="mostrarTela(\'login-empresa\')">Entre como Empresa</span> | <span onclick="mostrarTela(\'login-candidato\')">Entre como Candidato</span>';
+                }
+            }
+        }
+
+        // Função que realmente faz o botão funcionar
+        function executarEntrada(tipo) {
+            // 1. Esconde menu superior
+            document.getElementById('nav-links').classList.add('hidden');
+            // 2. Mostra botão hambúrguer
+            document.getElementById('btn-hamburguer').style.display = 'block';
+            
+            // 3. Monta Sidebar
+            const menu = document.getElementById('menu-contextual');
+            if(tipo === 'empresa') {
+                menu.innerHTML = `
+                    <div class="menu-item" onclick="mostrarTela('perfil-empresa');toggleSidebar()"><i class="fas fa-user-circle"></i> Meu Perfil</div>
+                    <div class="menu-item"><i class="fas fa-briefcase"></i> Publicar Vagas</div>
+                    <div class="menu-item"><i class="fas fa-list-ul"></i> Minhas Vagas</div>
+                `;
+            } else {
+                menu.innerHTML = `
+                    <div class="menu-item"><i class="fas fa-user-circle"></i> Meu Perfil</div>
+                    <div class="menu-item"><i class="fas fa-search"></i> Ver Vagas</div>
+                `;
+            }
+            
+            // 4. Vai para o Dashboard
+            mostrarTela('dashboard');
+        }
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('active');
+            document.getElementById('overlay').classList.toggle('active');
+        }
+
+        let requisitos = [];
         function addReq() {
-            const input = document.getElementById('req_p_input');
-            if(!input.value.trim()) return;
-            reqsP.push(input.value.trim()); input.value = "";
-            renderList('lista-perfil-reqs', reqsP);
+            const val = document.getElementById('req_perf_input').value;
+            if(!val) return;
+            requisitos.push(val);
+            document.getElementById('req_perf_input').value = "";
+            const lista = document.getElementById('lista-p');
+            lista.innerHTML = requisitos.map((r, i) => `<div class="req-item"><span>• ${r}</span><i class="fas fa-trash" style="color:red; cursor:pointer" onclick="requisitos.splice(${i},1);addReq('')"></i></div>`).join('');
+        }
+    </script>
+</body>
+</html>
