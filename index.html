@@ -28,6 +28,7 @@
         .profile-pic { width: 120px; height: 120px; border-radius: 50%; border: 3px solid #0d47a1; object-fit: cover; display: block; margin: 0 auto 10px; background: #eee; }
         .meter { height: 5px; background: #eee; margin-top: -10px; margin-bottom: 15px; border-radius: 3px; overflow: hidden; }
         .meter-bar { height: 100%; width: 0; transition: 0.3s; }
+        .link-esqueci { color: #0d47a1; cursor: pointer; font-size: 12px; display: block; margin-top: -10px; margin-bottom: 15px; text-align: right; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -54,6 +55,25 @@
             <h1 style="color: #0d47a1; font-size: 3rem; margin-bottom: 40px;">CONNECTER</h1>
             <button class="card-balao" onclick="mostrarTela('cad-empresa')">Cadastre-se Empresa</button>
             <button class="card-balao" onclick="mostrarTela('cad-candidato')">Cadastre-se Candidato</button>
+        </div>
+
+        <div id="recuperar-senha" class="hidden">
+            <div class="box-container">
+                <h2>Recuperar Senha</h2>
+                <label>Digite seu e-mail cadastrado:</label>
+                <input type="email" id="email_recuperacao">
+                <button class="btn-acao" onclick="enviarLinkRecuperacao()">Enviar Link</button>
+                <button class="btn-acao" style="background:#888; margin-top:10px;" onclick="mostrarTela('home')">Voltar</button>
+            </div>
+        </div>
+
+        <div id="nova-senha-tela" class="hidden">
+            <div class="box-container">
+                <h2>Nova Senha</h2>
+                <label>Digite sua nova senha:</label>
+                <input type="password" id="nova_senha_input">
+                <button class="btn-acao" onclick="atualizarSenhaFinal()">Salvar Nova Senha</button>
+            </div>
         </div>
 
         <div id="cad-empresa" class="hidden">
@@ -84,6 +104,7 @@
                 <h2>Login Empresa</h2>
                 <label>E-mail/CNPJ</label><input type="text" id="e_login_email">
                 <label>Senha</label><input type="password" id="e_login_pass">
+                <span class="link-esqueci" onclick="mostrarTela('recuperar-senha')">Esqueci minha senha</span>
                 <button class="btn-acao" onclick="loginReal('empresa')">ENTRAR</button>
             </div>
         </div>
@@ -93,6 +114,7 @@
                 <h2>Login Candidato</h2>
                 <label>E-mail/CPF</label><input type="text" id="c_login_email">
                 <label>Senha</label><input type="password" id="c_login_pass">
+                <span class="link-esqueci" onclick="mostrarTela('recuperar-senha')">Esqueci minha senha</span>
                 <button class="btn-acao" onclick="loginReal('candidato')">ENTRAR</button>
             </div>
         </div>
@@ -169,44 +191,50 @@
             document.getElementById(id).classList.remove('hidden');
         }
 
-        // --- ALTERAÇÃO: LOGIN REAL ---
         async function loginReal(tipo) {
             const email = document.getElementById(tipo === 'empresa' ? 'e_login_email' : 'c_login_email').value;
             const pass = document.getElementById(tipo === 'empresa' ? 'e_login_pass' : 'c_login_pass').value;
-
             if(!email || !pass) return alert("Preencha todos os campos!");
-
             const { data, error } = await _supabase.auth.signInWithPassword({ email, password: pass });
-
-            if (error) {
-                alert("Acesso negado: E-mail ou senha incorretos.");
-            } else {
-                executarEntrada(tipo);
-            }
+            if (error) alert("E-mail ou senha incorretos.");
+            else executarEntrada(tipo);
         }
 
-        // --- ALTERAÇÃO: CADASTRO REAL ---
         async function cadastrarReal(tipo) {
             const email = document.getElementById(tipo === 'empresa' ? 'e_email' : 'c_email_cad').value;
             const pass = document.getElementById(tipo === 'empresa' ? 'e_pass_cad' : 'c_pass_cad').value;
-
             if(!email || !pass) return alert("Preencha e-mail e senha!");
-
             const { data, error } = await _supabase.auth.signUp({ email, password: pass });
-
-            if (error) {
-                alert("Erro ao cadastrar: " + error.message);
-            } else {
-                alert("Cadastro realizado! Agora faça o login.");
-                mostrarTela(tipo === 'empresa' ? 'login-empresa' : 'login-candidato');
-            }
+            if (error) alert("Erro ao cadastrar: " + error.message);
+            else { alert("Cadastro realizado! Faça login."); mostrarTela(tipo === 'empresa' ? 'login-empresa' : 'login-candidato'); }
         }
+
+        // --- FUNÇÕES DE RECUPERAÇÃO DE SENHA (ADICIONADAS) ---
+        async function enviarLinkRecuperacao() {
+            const email = document.getElementById('email_recuperacao').value;
+            if(!email) return alert("Digite seu e-mail!");
+            const { error } = await _supabase.auth.resetPasswordForEmail(email, { redirectTo: window.location.href });
+            if (error) alert("Erro: " + error.message);
+            else alert("E-mail de recuperação enviado!");
+        }
+
+        _supabase.auth.onAuthStateChange(async (event) => {
+            if (event == "PASSWORD_RECOVERY") mostrarTela('nova-senha-tela');
+        });
+
+        async function atualizarSenhaFinal() {
+            const novaSenha = document.getElementById('nova_senha_input').value;
+            if(novaSenha.length < 6) return alert("Mínimo 6 caracteres.");
+            const { error } = await _supabase.auth.updateUser({ password: novaSenha });
+            if (error) alert("Erro: " + error.message);
+            else { alert("Senha salva! Faça login."); mostrarTela('home'); }
+        }
+        // ---------------------------------------------------
 
         function executarEntrada(tipo) {
             document.getElementById('nav-links').classList.add('hidden');
             document.getElementById('btn-hamburguer').style.display = 'block';
             const menu = document.getElementById('menu-contextual');
-
             if(tipo === 'empresa') {
                 menu.innerHTML = `
                     <div class="menu-item" onclick="mostrarTela('perfil-empresa');toggleSidebar()"><i class="fas fa-user-circle"></i> Meu Perfil</div>
@@ -214,9 +242,8 @@
                     <div class="menu-item" onclick="mostrarTela('vagas-publicadas');toggleSidebar()"><i class="fas fa-bullhorn"></i> Vagas publicadas</div>
                     <div class="menu-item" onclick="mostrarTela('suporte');toggleSidebar()"><i class="fas fa-headset"></i> Suporte</div>
                 `;
-                const descCad = document.getElementById('e_desc_cad');
-                const descPerf = document.getElementById('e_perf_desc');
-                if(descCad && descPerf) descPerf.value = descCad.value;
+                const dC = document.getElementById('e_desc_cad'); const dP = document.getElementById('e_perf_desc');
+                if(dC && dP) dP.value = dC.value;
             } else {
                 menu.innerHTML = `
                     <div class="menu-item" onclick="mostrarTela('perfil-candidato');toggleSidebar()"><i class="fas fa-user-circle"></i> Meu Perfil</div>
@@ -230,8 +257,7 @@
         function addDinamico(idIn, idLis, arr) {
             const val = document.getElementById(idIn).value;
             if(!val) return;
-            arr.push(val); document.getElementById(idIn).value = "";
-            renderList(idLis, arr);
+            arr.push(val); document.getElementById(idIn).value = ""; renderList(idLis, arr);
         }
 
         function renderList(idLis, arr) {
