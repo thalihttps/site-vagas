@@ -60,27 +60,55 @@
             <div class="box-container">
                 <h2>Cadastro Empresa</h2>
                 <label>E-mail Corporativo:</label><input type="email" id="e_email">
-                <label>Senha:</label><input type="password" oninput="medirSenha(this.value, 'm1')"><div class="meter"><div id="m1" class="meter-bar"></div></div>
+                <label>Senha:</label><input type="password" id="e_pass_cad" oninput="medirSenha(this.value, 'm1')"><div class="meter"><div id="m1" class="meter-bar"></div></div>
                 <label>Nome Empresa:</label><input type="text" id="e_nome">
                 <label>CNPJ:</label><input type="text" maxlength="14" id="e_cnpj">
                 <label>Descrição:</label><textarea id="e_desc_cad" rows="3"></textarea>
-                <button class="btn-acao" onclick="executarEntrada('empresa')">CADASTRAR E ENTRAR</button>
+                <button class="btn-acao" onclick="cadastrarReal('empresa')">CADASTRAR E ENTRAR</button>
             </div>
         </div>
 
         <div id="cad-candidato" class="hidden">
             <div class="box-container">
                 <h2>Cadastro Candidato</h2>
-                <label>E-mail Pessoal:</label><input type="email"><label>Senha:</label><input type="password" oninput="medirSenha(this.value, 'm2')"><div class="meter"><div id="m2" class="meter-bar"></div></div>
-                <label>Nome Completo:</label><input type="text"><label>CPF:</label><input type="text" maxlength="11">
-                <button class="btn-acao" onclick="executarEntrada('candidato')">CADASTRAR E ENTRAR</button>
+                <label>E-mail Pessoal:</label><input type="email" id="c_email_cad">
+                <label>Senha:</label><input type="password" id="c_pass_cad" oninput="medirSenha(this.value, 'm2')"><div class="meter"><div id="m2" class="meter-bar"></div></div>
+                <label>Nome Completo:</label><input type="text" id="c_nome_cad">
+                <label>CPF:</label><input type="text" maxlength="11" id="c_cpf_cad">
+                <button class="btn-acao" onclick="cadastrarReal('candidato')">CADASTRAR E ENTRAR</button>
             </div>
         </div>
 
-        <div id="login-empresa" class="hidden"><div class="box-container"><h2>Login Empresa</h2><label>E-mail/CNPJ</label><input type="text"><label>Senha</label><input type="password"><button class="btn-acao" onclick="executarEntrada('empresa')">ENTRAR</button></div></div>
-        <div id="login-candidato" class="hidden"><div class="box-container"><h2>Login Candidato</h2><label>E-mail/CPF</label><input type="text"><label>Senha</label><input type="password"><button class="btn-acao" onclick="executarEntrada('candidato')">ENTRAR</button></div></div>
+        <div id="login-empresa" class="hidden">
+            <div class="box-container">
+                <h2>Login Empresa</h2>
+                <label>E-mail/CNPJ</label><input type="text" id="e_login_email">
+                <label>Senha</label><input type="password" id="e_login_pass">
+                <button class="btn-acao" onclick="loginReal('empresa')">ENTRAR</button>
+            </div>
+        </div>
+        
+        <div id="login-candidato" class="hidden">
+            <div class="box-container">
+                <h2>Login Candidato</h2>
+                <label>E-mail/CPF</label><input type="text" id="c_login_email">
+                <label>Senha</label><input type="password" id="c_login_pass">
+                <button class="btn-acao" onclick="loginReal('candidato')">ENTRAR</button>
+            </div>
+        </div>
 
         <div id="dashboard" class="hidden"><div class="box-container"><h2>Bem-vindo!</h2><p>Abra o menu lateral (☰) para navegar.</p></div></div>
+
+        <div id="minhas-vagas" class="hidden"><div class="box-container"><h2>Minhas Vagas</h2><p>Você ainda não possui candidaturas.</p></div></div>
+        <div id="vagas-publicadas" class="hidden"><div class="box-container"><h2>Vagas Publicadas</h2><p>Nenhuma vaga publicada ainda.</p></div></div>
+        <div id="suporte" class="hidden">
+            <div class="box-container">
+                <h2>Suporte</h2>
+                <label>Como podemos ajudar?</label>
+                <textarea rows="4"></textarea>
+                <button class="btn-acao">Enviar Ticket</button>
+            </div>
+        </div>
 
         <div id="perfil-empresa" class="hidden">
             <div class="box-container">
@@ -90,11 +118,9 @@
                     <label style="color:#0d47a1; cursor:pointer; font-size:12px">Alterar Logo<input type="file" style="display:none" onchange="previewImg(this, 'foto-e-prev')"></label>
                 </div>
                 <label>Descrição:</label><textarea id="e_perf_desc" rows="4"></textarea>
-                
                 <label>Requisitos/Valores da Empresa (+):</label>
                 <div style="display:flex; gap:10px;"><input type="text" id="req_p_input" style="margin:0"><button class="btn-acao" style="width:50px" onclick="addDinamico('req_p_input', 'lista-p', reqsP)">+</button></div>
                 <div id="lista-p" style="margin-top:10px"></div>
-
                 <label>País:</label><input type="text" placeholder="Brasil"><label>Estado:</label><input type="text"><label>Cidade:</label><input type="text">
                 <button class="btn-acao">ATUALIZAR PERFIL</button>
             </div>
@@ -131,6 +157,11 @@
     </div>
 
     <script>
+        // Configuração Supabase
+        const SB_URL = 'https://somngtdevyazwqonmayo.supabase.co'; 
+        const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNvbW5ndGRldnlhendxb25tYXlvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM1MTk2NTQsImV4cCI6MjA4OTA5NTY1NH0.RGf3ZMVw6n4GyIVroBBUoD7dmKQAOReUuAsew0DVBVw'; 
+        const _supabase = supabase.createClient(SB_URL, SB_KEY);
+
         let reqsP = []; let reqsV = [];
 
         function mostrarTela(id) {
@@ -138,53 +169,63 @@
             document.getElementById(id).classList.remove('hidden');
         }
 
+        // --- ALTERAÇÃO: LOGIN REAL ---
+        async function loginReal(tipo) {
+            const email = document.getElementById(tipo === 'empresa' ? 'e_login_email' : 'c_login_email').value;
+            const pass = document.getElementById(tipo === 'empresa' ? 'e_login_pass' : 'c_login_pass').value;
+
+            if(!email || !pass) return alert("Preencha todos os campos!");
+
+            const { data, error } = await _supabase.auth.signInWithPassword({ email, password: pass });
+
+            if (error) {
+                alert("Acesso negado: E-mail ou senha incorretos.");
+            } else {
+                executarEntrada(tipo);
+            }
+        }
+
+        // --- ALTERAÇÃO: CADASTRO REAL ---
+        async function cadastrarReal(tipo) {
+            const email = document.getElementById(tipo === 'empresa' ? 'e_email' : 'c_email_cad').value;
+            const pass = document.getElementById(tipo === 'empresa' ? 'e_pass_cad' : 'c_pass_cad').value;
+
+            if(!email || !pass) return alert("Preencha e-mail e senha!");
+
+            const { data, error } = await _supabase.auth.signUp({ email, password: pass });
+
+            if (error) {
+                alert("Erro ao cadastrar: " + error.message);
+            } else {
+                alert("Cadastro realizado! Agora faça o login.");
+                mostrarTela(tipo === 'empresa' ? 'login-empresa' : 'login-candidato');
+            }
+        }
+
         function executarEntrada(tipo) {
-    // Esconde os links de login/cadastro da parte superior
-    document.getElementById('nav-links').classList.add('hidden');
-    // Mostra o botão de menu (hambúrguer)
-    document.getElementById('btn-hamburguer').style.display = 'block';
-    
-    const menu = document.getElementById('menu-contextual');
+            document.getElementById('nav-links').classList.add('hidden');
+            document.getElementById('btn-hamburguer').style.display = 'block';
+            const menu = document.getElementById('menu-contextual');
 
-    if(tipo === 'empresa') {
-        // Menu para Empresa (Sua 2ª imagem)
-        menu.innerHTML = `
-            <div class="menu-item" onclick="mostrarTela('perfil-empresa');toggleSidebar()">
-                <i class="fas fa-user-circle"></i> Meu Perfil
-            </div>
-            <div class="menu-item" onclick="mostrarTela('publicar-vagas');toggleSidebar()">
-                <i class="fas fa-plus-square"></i> Cadastrar novas vagas
-            </div>
-            <div class="menu-item" onclick="toggleSidebar()">
-                <i class="fas fa-bullhorn"></i> Vagas publicadas
-            </div>
-            <div class="menu-item" onclick="toggleSidebar()">
-                <i class="fas fa-headset"></i> Suporte
-            </div>
-        `;
-        // Se houver descrição no cadastro, joga para o perfil
-        const descCad = document.getElementById('e_desc_cad');
-        const descPerf = document.getElementById('e_perf_desc');
-        if(descCad && descPerf) descPerf.value = descCad.value;
-
-    } else {
-        // Menu para Candidato/Usuário (Sua 1ª imagem)
-        menu.innerHTML = `
-            <div class="menu-item" onclick="mostrarTela('perfil-candidato');toggleSidebar()">
-                <i class="fas fa-user-circle"></i> Meu Perfil
-            </div>
-            <div class="menu-item" onclick="toggleSidebar()">
-                <i class="fas fa-briefcase"></i> Minhas vagas
-            </div>
-            <div class="menu-item" onclick="toggleSidebar()">
-                <i class="fas fa-headset"></i> Suporte
-            </div>
-        `;
-    }
-    
-    // Leva o usuário para a tela inicial do painel
-    mostrarTela('dashboard');
-}
+            if(tipo === 'empresa') {
+                menu.innerHTML = `
+                    <div class="menu-item" onclick="mostrarTela('perfil-empresa');toggleSidebar()"><i class="fas fa-user-circle"></i> Meu Perfil</div>
+                    <div class="menu-item" onclick="mostrarTela('publicar-vagas');toggleSidebar()"><i class="fas fa-plus-square"></i> Cadastrar novas vagas</div>
+                    <div class="menu-item" onclick="mostrarTela('vagas-publicadas');toggleSidebar()"><i class="fas fa-bullhorn"></i> Vagas publicadas</div>
+                    <div class="menu-item" onclick="mostrarTela('suporte');toggleSidebar()"><i class="fas fa-headset"></i> Suporte</div>
+                `;
+                const descCad = document.getElementById('e_desc_cad');
+                const descPerf = document.getElementById('e_perf_desc');
+                if(descCad && descPerf) descPerf.value = descCad.value;
+            } else {
+                menu.innerHTML = `
+                    <div class="menu-item" onclick="mostrarTela('perfil-candidato');toggleSidebar()"><i class="fas fa-user-circle"></i> Meu Perfil</div>
+                    <div class="menu-item" onclick="mostrarTela('minhas-vagas');toggleSidebar()"><i class="fas fa-briefcase"></i> Minhas vagas</div>
+                    <div class="menu-item" onclick="mostrarTela('suporte');toggleSidebar()"><i class="fas fa-headset"></i> Suporte</div>
+                `;
+            }
+            mostrarTela('dashboard');
+        }
 
         function addDinamico(idIn, idLis, arr) {
             const val = document.getElementById(idIn).value;
