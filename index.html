@@ -139,18 +139,52 @@
         }
 
         function executarEntrada(tipo) {
-            document.getElementById('nav-links').classList.add('hidden');
-            document.getElementById('btn-hamburguer').style.display = 'block';
-            if(tipo === 'empresa') {
-                document.getElementById('e_perf_desc').value = document.getElementById('e_desc_cad').value;
-            }
-            const menu = document.getElementById('menu-contextual');
-            menu.innerHTML = tipo === 'empresa' ? 
-                `<div class="menu-item" onclick="mostrarTela('perfil-empresa');toggleSidebar()"><i class="fas fa-user-circle"></i> Meu Perfil</div>
-                 <div class="menu-item" onclick="mostrarTela('publicar-vagas');toggleSidebar()"><i class="fas fa-briefcase"></i> Publicar Vagas</div>` :
-                `<div class="menu-item" onclick="mostrarTela('perfil-candidato');toggleSidebar()"><i class="fas fa-user-circle"></i> Meu Perfil</div>`;
-            mostrarTela('dashboard');
-        }
+    // Esconde os links de login/cadastro da parte superior
+    document.getElementById('nav-links').classList.add('hidden');
+    // Mostra o botão de menu (hambúrguer)
+    document.getElementById('btn-hamburguer').style.display = 'block';
+    
+    const menu = document.getElementById('menu-contextual');
+
+    if(tipo === 'empresa') {
+        // Menu para Empresa (Sua 2ª imagem)
+        menu.innerHTML = `
+            <div class="menu-item" onclick="mostrarTela('perfil-empresa');toggleSidebar()">
+                <i class="fas fa-user-circle"></i> Meu Perfil
+            </div>
+            <div class="menu-item" onclick="mostrarTela('publicar-vagas');toggleSidebar()">
+                <i class="fas fa-plus-square"></i> Cadastrar novas vagas
+            </div>
+            <div class="menu-item" onclick="toggleSidebar()">
+                <i class="fas fa-bullhorn"></i> Vagas publicadas
+            </div>
+            <div class="menu-item" onclick="toggleSidebar()">
+                <i class="fas fa-headset"></i> Suporte
+            </div>
+        `;
+        // Se houver descrição no cadastro, joga para o perfil
+        const descCad = document.getElementById('e_desc_cad');
+        const descPerf = document.getElementById('e_perf_desc');
+        if(descCad && descPerf) descPerf.value = descCad.value;
+
+    } else {
+        // Menu para Candidato/Usuário (Sua 1ª imagem)
+        menu.innerHTML = `
+            <div class="menu-item" onclick="mostrarTela('perfil-candidato');toggleSidebar()">
+                <i class="fas fa-user-circle"></i> Meu Perfil
+            </div>
+            <div class="menu-item" onclick="toggleSidebar()">
+                <i class="fas fa-briefcase"></i> Minhas vagas
+            </div>
+            <div class="menu-item" onclick="toggleSidebar()">
+                <i class="fas fa-headset"></i> Suporte
+            </div>
+        `;
+    }
+    
+    // Leva o usuário para a tela inicial do painel
+    mostrarTela('dashboard');
+}
 
         function addDinamico(idIn, idLis, arr) {
             const val = document.getElementById(idIn).value;
